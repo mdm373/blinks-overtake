@@ -1,42 +1,43 @@
 #include "player.h"
 
 namespace player {
-    #define PLAYER_LEN 4
-    Color playerColors[] = {CYAN, YELLOW, MAGENTA, GREEN};
-    byte playerEnums[PLAYER_LEN];
-    byte count;
-    byte max;
+    
+    const Color _playerColors[] = {CYAN, YELLOW, MAGENTA, GREEN};
+    
+    byte _playerEnums[PLAYER_LIMIT];
+    byte _count;
+    byte _max;
 
     Color getColor(const byte index) {
-        return playerColors[index];
+        return _playerColors[index];
     }
     void add(const byte enumeration) {
-        if(count < getMax()) {
-            playerEnums[count] = enumeration;
-            count = count + 1;
+        if(_count < getMax()) {
+            _playerEnums[_count] = enumeration;
+            _count = _count + 1;
         }
     }
     byte getCount() {
-        return count;
+        return _count;
     }
     byte getMax() {
-        return max > PLAYER_LEN ? PLAYER_LEN : max;
+        return _max > PLAYER_LIMIT ? PLAYER_LIMIT : _max;
     }
-    void setMax(const byte aMax) {
-        max = aMax;
+    void setMax(const byte max) {
+        _max = max;
     }
     void reset() {
-        count = 0;
-        max = 0;
-        for(int i = 0; i < PLAYER_LEN; i++) {
-            playerEnums[i] = 0;
+        _count = 0;
+        _max = 0;
+        for(int i = 0; i < PLAYER_LIMIT; i++) {
+            _playerEnums[i] = 0;
         }
     }
 
     byte getIndex(const byte enumeration) {
         byte count = getMax();
         for(byte i = 0; i < count; i++){
-            if(playerEnums[i] == enumeration) {
+            if(_playerEnums[i] == enumeration) {
                 return i;
             }
         }

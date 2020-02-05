@@ -27,6 +27,6 @@ int main()  {
     sendAction(4, action::Action{.type= GAME_DEF_ACTION_ENUMERATE_RESPONSE, .payload=2});
     loop();
     blinklibMock::expireValuesOnAllFacesExceptBoth(0, 4);
-    sendAction(0, action::Action{.type=GAME_DEF_ACTION_TO_STATE_PLAYER_ASSIGN, .payload=6});
+    sendAction(0, action::Action{.type=GAME_DEF_ACTION_ASSGN_PLAYERS, .payload=6});
     loop();
 }

@@ -7,9 +7,9 @@
 
 
 namespace statePlayerAssign{
-    byte neighborAssigns[FACE_COUNT];
-    BlinkTime pickTime;
-    byte pickFace;
+    byte _neighborAssigns[FACE_COUNT];
+    BlinkTime _pickTime;
+    byte _pickFace;
 
     bool handleSwitchToBoard(const action::Action& action) {
         if(player::getCount() == player::getMax()) {
@@ -31,17 +31,17 @@ namespace statePlayerAssign{
     bool handlePlayerPicked(const action::Action& action){
         if(action::isBroadcastRecieved(action, GAME_DEF_ACTION_PLAYER_PICKED)){
             player::add(action.payload);
-            pickFace = FACE_COUNT;
-            pickTime = 0;
+            _pickFace = FACE_COUNT;
+            _pickTime = 0;
             FOREACH_FACE(f){
-                if(neighborAssigns[f] == action.payload) {
-                    neighborAssigns[f] = STATE_ENUMERATE_MAX;
+                if(_neighborAssigns[f] == action.payload) {
+                    _neighborAssigns[f] = STATE_ENUMERATE_MAX;
                 }
             }
             return true;
         }
-        if(pickFace < FACE_COUNT) {
-            if(millis() - pickTime < 700) {
+        if(_pickFace < FACE_COUNT) {
+            if(millis() - _pickTime < 700) {
                 return true;
             }
             if(isAlone()){
@@ -49,11 +49,11 @@ namespace statePlayerAssign{
                 return true;
             }
 
-            action::broadcast(action::Action{.type=GAME_DEF_ACTION_PLAYER_PICKED, .payload=neighborAssigns[pickFace]});
-            player::add(neighborAssigns[pickFace]);
-            neighborAssigns[pickFace] = STATE_ENUMERATE_MAX;
-            pickFace = FACE_COUNT;
-            pickTime = 0;
+            action::broadcast(action::Action{.type=GAME_DEF_ACTION_PLAYER_PICKED, .payload=_neighborAssigns[_pickFace]});
+            player::add(_neighborAssigns[_pickFace]);
+            _neighborAssigns[_pickFace] = STATE_ENUMERATE_MAX;
+            _pickFace = FACE_COUNT;
+            _pickTime = 0;
             return true;
         }
         return false;
@@ -63,16 +63,16 @@ namespace statePlayerAssign{
         FOREACH_FACE(f){
             const byte value = getLastValueReceivedOnFace(f);
             if(!isValueReceivedOnFaceExpired(f) && value >= 1) {
-                neighborAssigns[f] = value -1;
+                _neighborAssigns[f] = value -1;
                 continue;
             }
-            if(neighborAssigns[f] == STATE_ENUMERATE_MAX) {
+            if(_neighborAssigns[f] == STATE_ENUMERATE_MAX) {
                 continue;
             }
             
-            if(pickTime == 0) {
-                pickTime = millis();
-                pickFace = f;
+            if(_pickTime == 0) {
+                _pickTime = millis();
+                _pickFace = f;
                 return;
             }
         }
@@ -99,10 +99,10 @@ namespace statePlayerAssign{
 
     void enter() {
         buttonSingleClicked(); //clear cache state
-        pickFace = FACE_COUNT;
-        pickTime = 0;
+        _pickFace = FACE_COUNT;
+        _pickTime = 0;
         FOREACH_FACE(f) {
-            neighborAssigns[f] = STATE_ENUMERATE_MAX;
+            _neighborAssigns[f] = STATE_ENUMERATE_MAX;
         }
         player::reset();
         player::setMax(stateEnumerate::getTotalEnumerations() - 1); // -2 players +1 total enums zero indexed

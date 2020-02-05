@@ -1,6 +1,5 @@
 #include "action.h"
-#include "blink-types.h"
-#include "log.h"
+
 namespace action {
 
     byte cachedBroadcast[ACTION_LEN];

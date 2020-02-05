@@ -6,6 +6,7 @@
 #include "blink-types.h"
 
 namespace player {
+    #define PLAYER_LIMIT 4
     Color getColor(const byte index);
     void add(const byte enumeration);
     byte getCount();

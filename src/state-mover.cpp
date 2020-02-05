@@ -5,24 +5,25 @@
 #include "action.h"
 #include "state-enumerate.h"
 #include "game-def.h"
+
 namespace stateMover {
     
-    BlinkTime indcStart;
-    bool isError;
+    BlinkTime _indcStart;
+    bool _isError;
 
     void updateView(){
-        if(indcStart == 0) {
+        if(_indcStart == 0) {
             animate::radiate(player::getMyColor(), 0, 6);
             return;
         }
         
-        if(millis() - indcStart > 800) {
-            indcStart = 0;
-            isError = false;
+        if(millis() - _indcStart > 800) {
+            _indcStart = 0;
+            _isError = false;
             return;
         }
 
-        if(isError) {
+        if(_isError) {
             animate::pulse(RED, 4);
             return;
         }
@@ -32,10 +33,10 @@ namespace stateMover {
 
     void loop(const stateCommon::LoopData& data) {
         updateView();
-        if(buttonSingleClicked() && indcStart == 0){
-            indcStart = millis();
+        if(buttonSingleClicked() && _indcStart == 0){
+            _indcStart = millis();
             if(isValueReceivedOnFaceExpired(0)){
-                isError = true;
+                _isError = true;
                 return;
             }
             action::send(action::Action{.type=GAME_DEF_ACTION_MOVE_REQUEST, .payload = stateEnumerate::getMyEnumeration()}, 0);            
@@ -43,8 +44,8 @@ namespace stateMover {
     }
 
     void enter() {
-        isError = false;
-        indcStart = 0;
-        buttonSingleClicked();
+        _isError = false;
+        _indcStart = 0;
+        buttonSingleClicked(); //reset the cached state
     }
 }

@@ -1,5 +1,7 @@
 #include "animate.h"
 
+#pragma clang diagnostic ignored "-Wnarrowing"
+
 namespace animate {
     void pulse(Color c, byte rate) {
         byte b = sin8_C(millis()/rate);
@@ -12,7 +14,7 @@ namespace animate {
         }
     }
     void spin(Color c, byte rate) {
-        byte face = (byte)(millis()/rate) / 42; //roughly 255 / faceCount 
+        byte face = (millis()/rate) / 42; //roughly 255 / faceCount 
         FOREACH_FACE(f) {
             byte distance = f <= face ? (face - f) : (( FACE_COUNT  - f) + face);
             byte brightness = 255 - (distance * 51);
@@ -21,7 +23,7 @@ namespace animate {
     }
 
     void spin(Color marker, Color background, byte rate) {
-        byte face = (byte)(millis()/rate) / 42; //roughly 255 / faceCount 
+        byte face = (millis()/rate) / 42; //roughly 255 / faceCount 
         FOREACH_FACE(f) {
             if( face == f) {
                 setColorOnFace(marker, f);

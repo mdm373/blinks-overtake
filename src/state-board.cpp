@@ -5,31 +5,31 @@
 
 namespace stateBoard {
     
-    byte moveFace;
-    BlinkTime moveTime;
-    byte currentPlayer;
-    byte moveIndex;
+    BlinkTime _moveTime;
+    byte _moveFace;
+    byte _currentPlayer;
+    byte _moveIndex;
 
     void loop(const stateCommon::LoopData& data){
-        if(moveTime == 0){
+        if(_moveTime == 0){
             setColor(WHITE);
         } else {
-            if(millis() - moveTime > 800) {
-                moveTime = 0;
+            if(millis() - _moveTime > 800) {
+                _moveTime = 0;
             }
-            animate::spin(player::getColor(moveIndex), 4);
+            animate::spin(player::getColor(_moveIndex), 4);
         }
 
-        if(data.action.type == GAME_DEF_ACTION_MOVE_REQUEST && moveTime == 0) {
-            moveTime = millis();
-            moveFace = data.face;
-            moveIndex = player::getIndex(data.action.payload);
+        if(data.action.type == GAME_DEF_ACTION_MOVE_REQUEST && _moveTime == 0) {
+            _moveTime = millis();
+            _moveFace = data.face;
+            _moveIndex = player::getIndex(data.action.payload);
         }
     }
     void enter(){
-        moveFace = FACE_COUNT;
-        moveTime = 0;
-        moveIndex = 255;
-        currentPlayer = 0;
+        _moveFace = FACE_COUNT;
+        _moveTime = 0;
+        _moveIndex = 255;
+        _currentPlayer = 0;
     }
 }

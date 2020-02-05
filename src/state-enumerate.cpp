@@ -7,12 +7,11 @@
 
 namespace stateEnumerate {
     
-    byte enumeration;
-    byte totalEnumerations;
-
-    byte incomingFace;
-    byte outgoingFace;
-    byte outgoingEnumeration;
+    byte _enumeration;
+    byte _totalEnumerations;
+    byte _incomingFace;
+    byte _outgoingFace;
+    byte _outgoingEnumeration;
 
     bool respondNoAssign(const stateCommon::LoopData& data){
         if (data.action.type == GAME_DEF_ACTION_ENUMERATE_REQUEST) {
@@ -23,8 +22,8 @@ namespace stateEnumerate {
     }
 
     void sendBack(byte assignedOut) {
-        if(incomingFace < FACE_COUNT) {
-            const bool sent = action::send(action::Action{.type = GAME_DEF_ACTION_ENUMERATE_RESPONSE, .payload=assignedOut}, incomingFace);
+        if(_incomingFace < FACE_COUNT) {
+            const bool sent = action::send(action::Action{.type = GAME_DEF_ACTION_ENUMERATE_RESPONSE, .payload=assignedOut}, _incomingFace);
             if(!sent) {
                 globalEvents::changeAllToFail();
                 return;
@@ -38,25 +37,25 @@ namespace stateEnumerate {
             return;
         }
 
-        totalEnumerations = assignedOut;
-        action::broadcast(action::Action{.type=GAME_DEF_ACTION_TO_STATE_PLAYER_ASSIGN, .payload = totalEnumerations});
+        _totalEnumerations = assignedOut;
+        action::broadcast(action::Action{.type=GAME_DEF_ACTION_ASSGN_PLAYERS, .payload = _totalEnumerations});
         stateCommon::handleStateChange(GAME_DEF_STATE_PLAYER_ASSIGN);
     }
 
     void sendAroundThenBack() {
         bool sent = false;
-        while(sent == false && outgoingFace < FACE_COUNT) {
-            if(outgoingFace == incomingFace) {
-                outgoingFace = outgoingFace + 1;
+        while(sent == false && _outgoingFace < FACE_COUNT) {
+            if(_outgoingFace == _incomingFace) {
+                _outgoingFace = _outgoingFace + 1;
                 continue;    
             }
-            sent = action::send(action::Action{.type = GAME_DEF_ACTION_ENUMERATE_REQUEST, .payload=outgoingEnumeration}, outgoingFace);
+            sent = action::send(action::Action{.type = GAME_DEF_ACTION_ENUMERATE_REQUEST, .payload=_outgoingEnumeration}, _outgoingFace);
             if(!sent){
-                outgoingFace = outgoingFace + 1;
+                _outgoingFace = _outgoingFace + 1;
             }
         }
         if(!sent) {
-            sendBack(outgoingEnumeration-1);
+            sendBack(_outgoingEnumeration-1);
             return;
         }
         if(stateCommon::getCurrent() != GAME_DEF_STATE_ENUM_PEND){
@@ -66,22 +65,25 @@ namespace stateEnumerate {
     
     void loopNone(const stateCommon::LoopData& data){
         animate::pulse(WHITE, 8);
-        if(!buttonSingleClicked() && data.action.type != GAME_DEF_ACTION_ENUMERATE_REQUEST) {
+        
+        const bool wasNotClicked = !buttonSingleClicked();
+        if (wasNotClicked && data.action.type != GAME_DEF_ACTION_ENUMERATE_REQUEST) {
             return;
         }
-        byte incomingEnumeration = 0;
-        incomingFace = FACE_COUNT;
-        if(!buttonSingleClicked()){
-            incomingFace = data.face;
-            incomingEnumeration = data.action.payload;
+        
+        _incomingFace = FACE_COUNT;
+        _enumeration = 0;
+        if (wasNotClicked){
+            _incomingFace = data.face;
+            _enumeration = data.action.payload;
         }
-        if(incomingEnumeration > STATE_ENUMERATE_MAX) {
+        if (_enumeration > STATE_ENUMERATE_MAX) {
             globalEvents::changeAllToFail();
             return;
         }
-        enumeration = incomingEnumeration;
-        outgoingFace = 0;
-        outgoingEnumeration = incomingEnumeration+1;
+        
+        _outgoingFace = 0;
+        _outgoingEnumeration = _enumeration + 1;
         sendAroundThenBack();
     }
 
@@ -90,46 +92,50 @@ namespace stateEnumerate {
         if (respondNoAssign(data)) {
             return;
         }
+
         if (data.action.type != GAME_DEF_ACTION_ENUMERATE_RESPONSE) {
             return;
         }
 
-        if( data.face != outgoingFace) {
+        if( data.face != _outgoingFace) {
             globalEvents::changeAllToFail();
             return;
         }
         
-        outgoingFace = outgoingFace + 1;
-        if (data.action.payload >= outgoingEnumeration) {
-            outgoingEnumeration = data.action.payload+1;
+        _outgoingFace = _outgoingFace + 1;
+        if (data.action.payload >= _outgoingEnumeration) {
+            _outgoingEnumeration = data.action.payload+1;
         }
         sendAroundThenBack();
 
     }
 
     void loopAssigned(const stateCommon::LoopData& data){
-        if( respondNoAssign(data)) {
+        if (respondNoAssign(data)) {
             return;
         }
         
-        if(action::isBroadcastRecieved(data.action, GAME_DEF_ACTION_TO_STATE_PLAYER_ASSIGN)) {
-            totalEnumerations = data.action.payload;
+        if (action::isBroadcastRecieved(data.action, GAME_DEF_ACTION_ASSGN_PLAYERS)) {
+            _totalEnumerations = data.action.payload;
             stateCommon::handleStateChange(GAME_DEF_STATE_PLAYER_ASSIGN);
         }
     }
 
     void enterNone() {
         buttonSingleClicked(); //clear the buffer
-        enumeration = 0;
-        totalEnumerations = 0;
+        _enumeration = 0;
+        _totalEnumerations = 0;
+        _incomingFace = FACE_COUNT;
+        _outgoingFace = 0;
+        _outgoingEnumeration = 0;
     }
 
     byte getTotalEnumerations(){
-        return totalEnumerations;
+        return _totalEnumerations;
     }
 
     byte getMyEnumeration(){
-        return enumeration;
+        return _enumeration;
     }
 
 }

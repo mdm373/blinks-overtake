@@ -1,6 +1,6 @@
 
 #ifndef HEADER_BLINKLIB_MOCK
-#define HEADER_BLINKLIB_MOCK
+    #define HEADER_BLINKLIB_MOCK
 
     #include <string>
 

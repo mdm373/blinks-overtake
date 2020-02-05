@@ -1,41 +1,38 @@
 #include "state-common.h"
 #include "log.h"
-#include "animate.h"
 
 namespace stateCommon {
 
-    stateLoop loops[STATE_COMMON_STATE_LEN];
-    stateAction enters[STATE_COMMON_STATE_LEN];
-    stateAction exits[STATE_COMMON_STATE_LEN];
+    stateLoop _loops[STATE_COMMON_STATE_LEN];
+    stateAction _enters[STATE_COMMON_STATE_LEN];
+    stateAction _exits[STATE_COMMON_STATE_LEN];
     
-    byte currentState = 0;
+    byte _currentState = 0;
     
     void handleStateChange(const byte newState) {
         LOG_LINE("changed to state:", newState);
-        if(exits[currentState] != nullptr) {
-            exits[currentState]();
+        if(_exits[_currentState] != nullptr) {
+            _exits[_currentState]();
         }
-        currentState = newState;
-        if(enters[currentState] != nullptr) {
-            enters[currentState]();
+        _currentState = newState;
+        if(_enters[_currentState] != nullptr) {
+            _enters[_currentState]();
         }
     }
 
     byte getCurrent() {
-        return currentState;
+        return _currentState;
     }
 
     void addState(const stateLoop loop, const stateAction enter, const stateAction exit, const byte stateIndex) {
-        loops[stateIndex] = loop;
-        enters[stateIndex] = enter;
-        exits[stateIndex] = exit;
+        _loops[stateIndex] = loop;
+        _enters[stateIndex] = enter;
+        _exits[stateIndex] = exit;
     }
 
     void loop(const LoopData& data) {
-        if(loops[currentState] == nullptr) {
-            animate::pulse(ORANGE, 4);
-            return;
+        if(_loops[_currentState] != nullptr) {
+            _loops[_currentState](data);
         }
-        loops[currentState](data);
     }
 }

@@ -1,7 +1,7 @@
 #include "global-events.h"
 #include "game-def.h"
 
-#pragma clang diagnostic ignored "-Wc++11-narrowing"
+#pragma clang diagnostic ignored "-Wnarrowing"
 
 namespace globalEvents {
 
