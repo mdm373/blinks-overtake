@@ -5,6 +5,9 @@
 * [ArduinoIDE](https://www.arduino.cc/en/Guide/HomePage)
 * [BlinksSDK](https://github.com/Move38/Blinks-SDK)
 
+## Optionals
+* VS Code w/ Microsoft [Arduino plugin](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.vscode-arduino)
+
 
 ## Game Instructions
 📝 TODO
