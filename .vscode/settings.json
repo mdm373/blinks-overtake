@@ -1,22 +1,25 @@
 {
     "workbench.colorCustomizations": {
-        "activityBar.background": "#063524",
-        "titleBar.activeBackground": "#094A32",
-        "titleBar.activeForeground": "#EEFDF8"
+        "activityBar.background": "#112F4D",
+        "titleBar.activeBackground": "#18426B",
+        "titleBar.activeForeground": "#F7FAFD"
     },
     "files.associations": {
-        "__functional_base": "cpp",
-        "__functional_base_03": "cpp",
-        "__hash_table": "cpp",
-        "__tuple": "cpp",
-        "array": "cpp",
+        "iostream": "cpp",
+        "string": "cpp",
+        "iosfwd": "cpp",
+        "ios": "cpp",
+        "__string": "cpp",
+        "__config": "cpp",
+        "__cxx_version": "cpp",
+        "__locale": "cpp",
+        "bitset": "cpp",
         "chrono": "cpp",
-        "type_traits": "cpp",
-        "functional": "cpp",
-        "limits": "cpp",
-        "memory": "cpp",
-        "ratio": "cpp",
-        "tuple": "cpp",
-        "utility": "cpp"
+        "cstdlib": "cpp",
+        "locale": "cpp",
+        "stdexcept": "cpp",
+        "string_view": "cpp",
+        "system_error": "cpp",
+        "cstddef": "cpp"
     }
 }

@@ -1,15 +1,17 @@
 #include "state-common.h"
-#include <string.h>
+#include "log.h"
+#include "animate.h"
 
 namespace stateCommon {
-    
-    stateLoop loops[STATE_COMMON_INDEX_LENGTH];
-    stateAction enters[STATE_COMMON_INDEX_LENGTH];
-    stateAction exits[STATE_COMMON_INDEX_LENGTH];
+
+    stateLoop loops[STATE_COMMON_STATE_LEN];
+    stateAction enters[STATE_COMMON_STATE_LEN];
+    stateAction exits[STATE_COMMON_STATE_LEN];
     
     byte currentState = 0;
     
     void handleStateChange(const byte newState) {
+        LOG_LINE("changed to state:", newState);
         if(exits[currentState] != nullptr) {
             exits[currentState]();
         }
@@ -30,8 +32,10 @@ namespace stateCommon {
     }
 
     void loop(const LoopData& data) {
-        if(loops[currentState] != nullptr) {
-            loops[currentState](data);
+        if(loops[currentState] == nullptr) {
+            animate::pulse(ORANGE, 4);
+            return;
         }
+        loops[currentState](data);
     }
 }

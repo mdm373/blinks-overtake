@@ -1,21 +1,22 @@
-#include <ArduinoTypes.h>
-
 #ifndef HEADER_ACTION
 #define HEADER_ACTION
 
+#include <ArduinoTypes.h>
+#include "blink-types.h"
+
 namespace action {
 
-    typedef struct Action {
+    struct Action {
         const byte type;
         const byte payload;
-        Action operator=(const Action &a) { return a;}
     };
 
-    #define ACTION_LEN 3
+    #define ACTION_LEN 2
 
     void broadcast(const Action& action);
+    bool send(const Action& action, const byte face);
     void broadcastEmpty(const byte type);
-    bool isBroadcastRecieved(const Action& action);
+    bool isBroadcastRecieved(const Action& action, const byte type);
     void encode(const Action& action, byte* buffer);
     Action decode(const byte* buffer);
 }
