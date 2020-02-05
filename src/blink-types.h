@@ -4,7 +4,7 @@
 #define BlinkTime unsigned long
 
 #ifdef TEST
-    #include "test/blinklib-mock.h"
+    #include "../test/blinklib-mock.h"
 #else
     #include <ArduinoTypes.h>
     #include <blinklib.h>

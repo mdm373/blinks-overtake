@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "../main.h"
 #include "blinklib-mock.h"
-#include "../action.h"
-#include "../game-def.h"
+#include "../src/game-def.h"
+#include "../src/action.h"
+#include "../src/main.h"
 
 void sendAction(const byte face, const action::Action& action) {
     action::encode(action, &blinklibMock::datagramPostBuffer[0]);
@@ -22,7 +22,6 @@ int main()  {
     loop();
     blinklibMock::expireValuesOnAllFacesExceptBoth(0, 4);
     sendAction(0, action::Action{.type= GAME_DEF_ACTION_ENUMERATE_REQUEST, .payload=1});
-    //blinklibMock::click();
     loop();
     blinklibMock::expireValuesOnAllFacesExceptBoth(0, 4);
     sendAction(4, action::Action{.type= GAME_DEF_ACTION_ENUMERATE_RESPONSE, .payload=2});
