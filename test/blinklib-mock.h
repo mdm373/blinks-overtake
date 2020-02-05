@@ -7,6 +7,7 @@
     typedef unsigned char uint8_t;
     typedef unsigned short uint16_t;
     typedef uint8_t byte;
+    
     #define FACE_COUNT 6
     #define IR_DATAGRAM_LEN 16
 

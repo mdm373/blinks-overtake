@@ -20,6 +20,7 @@
         "stdexcept": "cpp",
         "string_view": "cpp",
         "system_error": "cpp",
-        "cstddef": "cpp"
+        "cstddef": "cpp",
+        "__hash_table": "cpp"
     }
 }

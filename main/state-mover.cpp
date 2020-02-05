@@ -5,20 +5,20 @@
 #include "action.h"
 #include "state-enumerate.h"
 #include "game-def.h"
+#include "timestamp.h"
 
 namespace stateMover {
     
-    BlinkTime _indcStart;
     bool _isError;
 
     void updateView(){
-        if(_indcStart == 0) {
+        if(timestamp::isClear()) {
             animate::radiate(player::getMyColor(), 0, 6);
             return;
         }
         
-        if(millis() - _indcStart > 800) {
-            _indcStart = 0;
+        if(timestamp::getDuration() > 800) {
+            timestamp::clear();
             _isError = false;
             return;
         }
@@ -33,8 +33,8 @@ namespace stateMover {
 
     void loop(const stateCommon::LoopData& data) {
         updateView();
-        if(buttonSingleClicked() && _indcStart == 0){
-            _indcStart = millis();
+        if(buttonSingleClicked() && timestamp::isClear()){
+            timestamp::mark();
             if(isValueReceivedOnFaceExpired(0)){
                 _isError = true;
                 return;
@@ -45,7 +45,7 @@ namespace stateMover {
 
     void enter() {
         _isError = false;
-        _indcStart = 0;
+        timestamp::clear();
         buttonSingleClicked(); //reset the cached state
     }
 }

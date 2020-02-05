@@ -20,7 +20,7 @@
 
         void handleStateChange(const byte newState);
         byte getCurrent();
-        void addState(const stateLoop loop, const stateAction enter, const stateAction exit, const byte stateIndex);
+        void addState(const stateLoop loop, const stateAction enter, const byte stateIndex);
         void loop(const LoopData& loopData);
         
     }

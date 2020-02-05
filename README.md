@@ -1,6 +1,10 @@
 # blinks-overtake 🎮
 | My first stab at writing a game for [blinks](https://blinks.games/)
 
+[learn how to play](https://mdm373.github.io/blinks-overtake/)
+
+# developers
+
 ## Requirements
 * [ArduinoIDE](https://www.arduino.cc/en/Guide/HomePage)
 * [BlinksSDK](https://github.com/Move38/Blinks-SDK)
@@ -10,7 +14,8 @@
 
 
 ## Game Instructions
-📝 TODO
+
+
 ## Mock Debug
 
 ### Additional Requirements

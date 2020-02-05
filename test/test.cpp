@@ -1,9 +1,9 @@
 #include <iostream>
 
 #include "blinklib-mock.h"
-#include "../src/game-def.h"
-#include "../src/action.h"
-#include "../src/main.h"
+#include "../main/game-def.h"
+#include "../main/action.h"
+#include "../main/main.h"
 
 void sendAction(const byte face, const action::Action& action) {
     action::encode(action, &blinklibMock::datagramPostBuffer[0]);

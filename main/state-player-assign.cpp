@@ -4,11 +4,10 @@
 #include "action.h"
 #include "player.h"
 #include "animate.h"
-
+#include "timestamp.h"
 
 namespace statePlayerAssign{
     byte _neighborAssigns[FACE_COUNT];
-    BlinkTime _pickTime;
     byte _pickFace;
 
     bool handleSwitchToBoard(const action::Action& action) {
@@ -32,7 +31,7 @@ namespace statePlayerAssign{
         if(action::isBroadcastRecieved(action, GAME_DEF_ACTION_PLAYER_PICKED)){
             player::add(action.payload);
             _pickFace = FACE_COUNT;
-            _pickTime = 0;
+            timestamp::clear();
             FOREACH_FACE(f){
                 if(_neighborAssigns[f] == action.payload) {
                     _neighborAssigns[f] = STATE_ENUMERATE_MAX;
@@ -41,7 +40,7 @@ namespace statePlayerAssign{
             return true;
         }
         if(_pickFace < FACE_COUNT) {
-            if(millis() - _pickTime < 700) {
+            if(timestamp::getDuration() < 700) {
                 return true;
             }
             if(isAlone()){
@@ -53,7 +52,7 @@ namespace statePlayerAssign{
             player::add(_neighborAssigns[_pickFace]);
             _neighborAssigns[_pickFace] = STATE_ENUMERATE_MAX;
             _pickFace = FACE_COUNT;
-            _pickTime = 0;
+            timestamp::clear();
             return true;
         }
         return false;
@@ -70,8 +69,8 @@ namespace statePlayerAssign{
                 continue;
             }
             
-            if(_pickTime == 0) {
-                _pickTime = millis();
+            if(timestamp::isClear()) {
+                timestamp::mark();
                 _pickFace = f;
                 return;
             }
@@ -100,7 +99,7 @@ namespace statePlayerAssign{
     void enter() {
         buttonSingleClicked(); //clear cache state
         _pickFace = FACE_COUNT;
-        _pickTime = 0;
+        timestamp::clear();
         FOREACH_FACE(f) {
             _neighborAssigns[f] = STATE_ENUMERATE_MAX;
         }

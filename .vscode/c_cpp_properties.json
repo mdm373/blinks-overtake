@@ -2,11 +2,15 @@
     "configurations": [
         {
             "name": "Mac",
-            "defines": ["TEST", "DEBUG"],
+            "defines": [
+                "TEST",
+                "DEBUG"
+            ],
             "includePath": [
                 "~/Documents/Arduino/hardware/Move38-Blinks-Library/avr/**",
                 "${workspaceFolder}",
-                "${workspaceFolder}/test"
+                "${workspaceFolder}/test",
+                "/Users/mdm373/Documents/Arduino/hardware/Move38-Blinks-Library/avr/**"
             ],
             "forcedInclude": [],
             "macFrameworkPath": [

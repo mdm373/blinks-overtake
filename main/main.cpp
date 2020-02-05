@@ -12,13 +12,13 @@
 namespace _main_ {
     
     void setup() {
-        stateCommon::addState(stateFail::loop, nullptr, nullptr, GAME_DEF_STATE_FAIL);
-        stateCommon::addState(stateEnumerate::loopNone, stateEnumerate::enterNone, nullptr, GAME_DEF_STATE_ENUM_NONE);
-        stateCommon::addState(stateEnumerate::loopPending, nullptr, nullptr, GAME_DEF_STATE_ENUM_PEND);
-        stateCommon::addState(stateEnumerate::loopAssigned, nullptr, nullptr, GAME_DEF_STATE_ENUM_ASGN);
-        stateCommon::addState(statePlayerAssign::loop, statePlayerAssign::enter, nullptr, GAME_DEF_STATE_PLAYER_ASSIGN);
-        stateCommon::addState(stateMover::loop, stateMover::enter, nullptr, GAME_DEF_STATE_MOVER);
-        stateCommon::addState(stateBoard::loop, stateBoard::enter, nullptr, GAME_DEF_STATE_BOARD);
+        stateCommon::addState(stateFail::loop, nullptr, GAME_DEF_STATE_FAIL);
+        stateCommon::addState(stateEnumerate::loopNone, stateEnumerate::enterNone, GAME_DEF_STATE_ENUM_NONE);
+        stateCommon::addState(stateEnumerate::loopPending, nullptr, GAME_DEF_STATE_ENUM_PEND);
+        stateCommon::addState(stateEnumerate::loopAssigned, nullptr, GAME_DEF_STATE_ENUM_ASGN);
+        stateCommon::addState(statePlayerAssign::loop, statePlayerAssign::enter, GAME_DEF_STATE_PLAYER_ASSIGN);
+        stateCommon::addState(stateMover::loop, stateMover::enter, GAME_DEF_STATE_MOVER);
+        stateCommon::addState(stateBoard::loop, stateBoard::enter, GAME_DEF_STATE_BOARD);
         stateCommon::handleStateChange(GAME_DEF_STATE_DEFAULT);
     }
 

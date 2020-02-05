@@ -1,5 +1,5 @@
 {
     "board": "Move38-Blinks-Library:avr:blink",
-    "sketch": "src/main.ino",
+    "sketch": "main/main.ino",
     "port": " "
 }

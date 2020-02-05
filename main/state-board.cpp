@@ -2,33 +2,33 @@
 #include "animate.h"
 #include "game-def.h"
 #include "player.h"
+#include "timestamp.h"
 
 namespace stateBoard {
     
-    BlinkTime _moveTime;
     byte _moveFace;
     byte _currentPlayer;
     byte _moveIndex;
 
     void loop(const stateCommon::LoopData& data){
-        if(_moveTime == 0){
+        if(timestamp::isClear()){
             setColor(WHITE);
         } else {
-            if(millis() - _moveTime > 800) {
-                _moveTime = 0;
+            if(timestamp::getDuration() > 800) {
+                timestamp::clear();
             }
             animate::spin(player::getColor(_moveIndex), 4);
         }
 
-        if(data.action.type == GAME_DEF_ACTION_MOVE_REQUEST && _moveTime == 0) {
-            _moveTime = millis();
+        if(data.action.type == GAME_DEF_ACTION_MOVE_REQUEST && timestamp::isClear()) {
+            timestamp::mark();
             _moveFace = data.face;
             _moveIndex = player::getIndex(data.action.payload);
         }
     }
     void enter(){
         _moveFace = FACE_COUNT;
-        _moveTime = 0;
+        timestamp::clear();
         _moveIndex = 255;
         _currentPlayer = 0;
     }
