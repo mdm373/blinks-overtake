@@ -7,6 +7,8 @@
 #include "timestamp.h"
 
 namespace statePlayerAssign{
+    
+    //reusable
     byte _neighborAssigns[FACE_COUNT];
     byte _pickFace;
 

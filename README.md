@@ -25,3 +25,11 @@
 ```
 sh ./scripts/test.sh
 ```
+
+
+## Memory Notes
+
+* Empty Sketch: 334 bytes
+* Low Memory Warning: 256
+* That gives us: 78 bytes to play with
+* Global Currently Uses: 281 (68%)

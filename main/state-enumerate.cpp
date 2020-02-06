@@ -9,6 +9,8 @@ namespace stateEnumerate {
     
     byte _enumeration;
     byte _totalEnumerations;
+
+    //reusable
     byte _incomingFace;
     byte _outgoingFace;
     byte _outgoingEnumeration;

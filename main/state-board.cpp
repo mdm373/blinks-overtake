@@ -6,6 +6,7 @@
 
 namespace stateBoard {
     
+    //reusable
     byte _moveFace;
     byte _currentPlayer;
     byte _moveIndex;

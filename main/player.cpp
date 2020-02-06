@@ -2,15 +2,23 @@
 
 namespace player {
     
-    const Color _playerColors[] = {CYAN, YELLOW, MAGENTA, GREEN};
-    
     byte _playerEnums[PLAYER_LIMIT];
     byte _count;
     byte _max;
 
     Color getColor(const byte index) {
-        return _playerColors[index];
+        if(index == 0) {
+            return CYAN;
+        }
+        if(index == 1) {
+            return YELLOW;
+        }
+        if(index == 2) {
+            return MAGENTA;
+        }
+        return GREEN;
     }
+
     void add(const byte enumeration) {
         if(_count < getMax()) {
             _playerEnums[_count] = enumeration;

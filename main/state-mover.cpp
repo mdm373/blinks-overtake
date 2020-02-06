@@ -9,6 +9,7 @@
 
 namespace stateMover {
     
+    //reusable
     bool _isError;
 
     void updateView(){
