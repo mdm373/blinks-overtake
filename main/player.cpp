@@ -25,6 +25,16 @@ namespace player {
             _count = _count + 1;
         }
     }
+
+    bool hasEnum(const byte enumeration) {
+        for(byte i = 0; i < _count; i++) {
+            if(_playerEnums[i] == enumeration) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     byte getCount() {
         return _count;
     }

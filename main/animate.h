@@ -5,6 +5,7 @@
 
     namespace animate {
         void pulse(Color c, byte rate);
+        void pulseFace(byte face, Color c, byte rate);
         void spin(Color marker, Color background, byte rate);
         void spin(Color marker, byte rate);
         void radiate(Color marker, byte face, byte rate);

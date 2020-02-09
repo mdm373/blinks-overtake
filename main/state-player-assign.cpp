@@ -5,25 +5,37 @@
 #include "player.h"
 #include "animate.h"
 #include "timestamp.h"
-
+#include "state-board.h"
 namespace statePlayerAssign{
     
     //reusable
     byte _neighborAssigns[FACE_COUNT];
     byte _pickFace;
+    bool isError;
+
+
+    void handleToBoardState(){
+        stateBoard::reset();
+        stateCommon::handleStateChange(GAME_DEF_STATE_BOARD);
+    }
 
     bool handleSwitchToBoard(const action::Action& action) {
         if(player::getCount() == player::getMax()) {
-            stateCommon::handleStateChange(GAME_DEF_STATE_BOARD);
+            handleToBoardState();
             return true;
         }
-        if(buttonSingleClicked() && player::getCount() >= 2) {
-            stateCommon::handleStateChange(GAME_DEF_STATE_BOARD);
+        if(buttonSingleClicked()) {
+            if(player::getCount() < 2) {
+                timestamp::mark();
+                isError = true;
+                return false;
+            }
+            handleToBoardState();
             action::broadcast(action::Action{.type=GAME_DEF_ACTION_START, .payload=(byte)millis()});
             return true;
         }
         if(action::isBroadcastRecieved(action, GAME_DEF_ACTION_START)) {
-            stateCommon::handleStateChange(GAME_DEF_STATE_BOARD);
+            handleToBoardState();
             return true;
         }
         return false;
@@ -45,16 +57,20 @@ namespace statePlayerAssign{
             if(timestamp::getDuration() < 700) {
                 return true;
             }
+            timestamp::clear();
             if(isAlone()){
                 stateCommon::handleStateChange(GAME_DEF_STATE_MOVER);
                 return true;
             }
-
+            if(player::hasEnum(_neighborAssigns[_pickFace])){
+                _neighborAssigns[_pickFace] = STATE_ENUMERATE_MAX;
+                _pickFace = FACE_COUNT;
+                return true;
+            }
             action::broadcast(action::Action{.type=GAME_DEF_ACTION_PLAYER_PICKED, .payload=_neighborAssigns[_pickFace]});
             player::add(_neighborAssigns[_pickFace]);
             _neighborAssigns[_pickFace] = STATE_ENUMERATE_MAX;
             _pickFace = FACE_COUNT;
-            timestamp::clear();
             return true;
         }
         return false;
@@ -80,6 +96,15 @@ namespace statePlayerAssign{
     }
     
     void updateView(){
+        if(isError) {
+            if(timestamp::getDuration() > 700) {
+                timestamp::clear();
+                isError = false;
+                return;
+            }
+            animate::pulse(RED, 4);
+            return;
+        }
         setColor(WHITE);
         const byte count = player::getCount();
         for (int i = 0; i < count; i++) {

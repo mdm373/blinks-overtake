@@ -11,7 +11,8 @@
         #define GAME_DEF_STATE_PLAYER_ASSIGN 4
         #define GAME_DEF_STATE_MOVER 5
         #define GAME_DEF_STATE_BOARD 6
-        #define GAME_DEF_STATE_LENGTH 7
+        #define GAME_DEF_STATE_PROGRESS 7
+        #define GAME_DEF_STATE_LENGTH 8
 
         /*
         * Avoiding a dependency cycle between this game definition and the more generalized state machine.
@@ -32,6 +33,8 @@
         #define GAME_DEF_ACTION_PLAYER_PICKED 7
         #define GAME_DEF_ACTION_START 8
         #define GAME_DEF_ACTION_MOVE_REQUEST 9
+        #define GAME_DEF_ACTION_MOVE_TAKEN 10
+        #define GAME_DEF_ACTION_PROGRESS 11
         #define GAME_DEF_STATE_DEFAULT GAME_DEF_STATE_ENUM_NONE
 
     }

@@ -10,7 +10,7 @@
 namespace stateMover {
     
     //reusable
-    bool _isError;
+    bool _hasSent;
 
     void updateView(){
         if(timestamp::isClear()) {
@@ -20,33 +20,30 @@ namespace stateMover {
         
         if(timestamp::getDuration() > 800) {
             timestamp::clear();
-            _isError = false;
             return;
         }
-
-        if(_isError) {
-            animate::pulse(RED, 4);
-            return;
-        }
-
         animate::spin(player::getMyColor(), 4);
     }
 
     void loop(const stateCommon::LoopData& data) {
         updateView();
-        if(buttonSingleClicked() && timestamp::isClear()){
-            timestamp::mark();
-            if(isValueReceivedOnFaceExpired(0)){
-                _isError = true;
-                return;
-            }
-            action::send(action::Action{.type=GAME_DEF_ACTION_MOVE_REQUEST, .payload = stateEnumerate::getMyEnumeration()}, 0);            
+        if(!timestamp::isClear()){
+            return;
         }
+        if(!_hasSent && !isValueReceivedOnFaceExpired(0)) {
+            _hasSent = true;
+            action::send(action::Action{.type=GAME_DEF_ACTION_MOVE_REQUEST, .payload = stateEnumerate::getMyEnumeration()}, 0);
+            timestamp::mark();
+            return;
+        }
+        if(_hasSent && isValueReceivedOnFaceExpired(0)) {
+            _hasSent = false;
+        }
+        
     }
 
     void enter() {
-        _isError = false;
+        _hasSent = false;
         timestamp::clear();
-        buttonSingleClicked(); //reset the cached state
     }
 }

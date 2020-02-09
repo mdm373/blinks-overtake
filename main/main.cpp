@@ -9,6 +9,8 @@
 #include "state-player-assign.h"
 #include "state-mover.h"
 #include "state-board.h"
+#include "state-progress.h"
+
 namespace _main_ {
     
     void setup() {
@@ -19,6 +21,7 @@ namespace _main_ {
         stateCommon::addState(statePlayerAssign::loop, statePlayerAssign::enter, GAME_DEF_STATE_PLAYER_ASSIGN);
         stateCommon::addState(stateMover::loop, stateMover::enter, GAME_DEF_STATE_MOVER);
         stateCommon::addState(stateBoard::loop, stateBoard::enter, GAME_DEF_STATE_BOARD);
+        stateCommon::addState(stateProgress::loop, stateProgress::enter, GAME_DEF_STATE_PROGRESS);
         stateCommon::handleStateChange(GAME_DEF_STATE_DEFAULT);
     }
 
