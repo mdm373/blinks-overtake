@@ -7,7 +7,7 @@
 
     namespace stateCommon {
         
-        #define STATE_COMMON_STATE_LEN 8
+        #define STATE_COMMON_STATE_LEN 6
 
         struct LoopData{
             const byte face;
@@ -16,8 +16,7 @@
 
         typedef void (*stateLoop)(const LoopData& LoopData);
         typedef void (*stateAction)(void);
-
-
+        
         void handleStateChange(const byte newState);
         byte getCurrent();
         void addState(const stateLoop loop, const stateAction enter, const byte stateIndex);
