@@ -21,10 +21,10 @@ int main()  {
     _main_::setup();
     loop();
     blinklibMock::expireValuesOnAllFacesExceptBoth(0, 4);
-    sendAction(0, action::Action{.type= GAME_DEF_ACTION_ENUMERATE_REQUEST, .payload=1});
+    // sendAction(0, action::Action{.type= GAME_DEF_ACTION_ENUMERATE_REQUEST, .payload=1});
     loop();
     blinklibMock::expireValuesOnAllFacesExceptBoth(0, 4);
-    sendAction(4, action::Action{.type= GAME_DEF_ACTION_ENUMERATE_RESPONSE, .payload=2});
+    // sendAction(4, action::Action{.type= GAME_DEF_ACTION_ENUMERATE_RESPONSE, .payload=2});
     loop();
     blinklibMock::expireValuesOnAllFacesExceptBoth(0, 4);
     sendAction(0, action::Action{.type=GAME_DEF_ACTION_ASSGN_PLAYERS, .payload=6});

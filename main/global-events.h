@@ -6,7 +6,6 @@
     namespace globalEvents {
         bool isHandled(const stateCommon::LoopData& data);
         void changeAllToReset();
-        void changeAllToFail();
     }
 
 #endif

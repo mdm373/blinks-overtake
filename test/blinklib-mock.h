@@ -38,7 +38,8 @@
     byte getLastValueReceivedOnFace(byte face);
 
     namespace blinklibMock{
-        void triggerAlone();
+        void setAlone(bool isAlone);
+        void setVerbose(bool isVerbose);
         void resetMocks();
         void click();
         void expireValueOnFace(byte face);

@@ -2,21 +2,35 @@
 #include "animate.h"
 #include "game-def.h"
 #include "player.h"
-#include "timestamp.h"
+#include "timer.h"
 #include "state-enumerate.h"
 #pragma clang diagnostic ignored "-Wnarrowing"
 
 namespace stateBoard {
     
     #define FACE_ELSEWHERE FACE_COUNT + 1
+    #define VIEW_STATE_NORMAL 0
+    #define VIEW_STATE_ERROR 1
+    #define VIEW_STATE_RADIATE 2
     
     byte _ownershipe[FACE_COUNT];
     byte _playerToFaceRequestes[PLAYER_LIMIT];
+    bool _isEndInitiator;
 
     //reusable
     byte _moveIndex;
-    bool _isError;
+    byte _viewState;
     
+    void handleEnter() {
+        _isEndInitiator = false;
+        _moveIndex = 0;
+        _viewState = VIEW_STATE_NORMAL;
+        buttonSingleClicked();
+        for(byte i = 0; i < PLAYER_LIMIT; i++) {
+            _playerToFaceRequestes[i] = FACE_COUNT;
+        }
+    }
+
     void updateOffOwners(){
         FOREACH_FACE(f){
             setValueSentOnFace(_ownershipe[f]+1, f);
@@ -34,40 +48,34 @@ namespace stateBoard {
     }
 
     void updateView() {
-        if (!timestamp::isClear()) {
-            if(timestamp::getDuration() < 800) {
-                if(_isError) {
-                    animate::pulse(RED, 4);
-                    return;
-                }
-                animate::radiate(player::getColor(_moveIndex), _playerToFaceRequestes[_moveIndex], 1);
-                return;
-            }
-            _isError = false;
-            timestamp::clear();
+        if(_viewState == VIEW_STATE_ERROR) {
+            animate::pulse(RED, 4);
+            return;
+        }
+        if(_viewState == VIEW_STATE_RADIATE) {
+            animate::radiate(player::getColor(_moveIndex), _playerToFaceRequestes[_moveIndex], 1);
+            return;
         }
         drawOwners();
     }
 
+    void handleViewNormalize(){
+        _viewState = VIEW_STATE_NORMAL;
+    }
     void processPlayerRequests(const stateCommon::LoopData& data){
         if(action::isBroadcastRecieved(data.action, GAME_DEF_ACTION_MOVE_TAKEN)) {
             _playerToFaceRequestes[data.action.payload] = FACE_ELSEWHERE;
         }
-        if(data.action.type == GAME_DEF_ACTION_MOVE_REQUEST && timestamp::isClear()) {
+        if(data.action.type == GAME_DEF_ACTION_MOVE_REQUEST && timer::runningFor()  == 0) {
             _moveIndex = player::getIndex(data.action.payload);
-            if(_playerToFaceRequestes[_moveIndex] != FACE_COUNT) {
-                _isError = true;
-                timestamp::mark();
+            timer::mark(800, handleViewNormalize);
+            if(_playerToFaceRequestes[_moveIndex] != FACE_COUNT || _ownershipe[data.face] != PLAYER_LIMIT) {
+                _viewState = VIEW_STATE_ERROR;
                 return;
             }
-            if(_ownershipe[data.face] != PLAYER_LIMIT){
-                _isError = true;
-                timestamp::mark();
-                return;
-            }
+            _viewState = VIEW_STATE_RADIATE;
             _playerToFaceRequestes[_moveIndex] = data.face;
             action::broadcast(action::Action{.type=GAME_DEF_ACTION_MOVE_TAKEN, .payload=_moveIndex});
-            timestamp::mark();
         }
     }
 
@@ -79,6 +87,7 @@ namespace stateBoard {
                 applyOwner(f, faceBuffer[0]);
             }
         }
+        timer::cancel();
         stateCommon::handleStateChange(GAME_DEF_STATE_PROGRESS);
     }
 
@@ -87,14 +96,30 @@ namespace stateBoard {
             changeToProgress();
             return true;
         }
+        if(action::isBroadcastRecieved(data.action, GAME_DEF_ACTION_END)) {
+            timer::cancel();
+            stateCommon::handleStateChange(GAME_DEF_STATE_END);
+            return true;
+        }
         if(buttonSingleClicked()){
-            const byte playerCount = player::getCount();
-            for(byte i =0; i < playerCount; i++) {
-                if(_playerToFaceRequestes[i] == FACE_COUNT) {
-                    _isError = true;
-                    timestamp::mark();
-                    return false;
-                }
+            bool allEmpty = true;
+            bool someEmpty = false;
+            for(byte i =0; i < player::getCount(); i++) {
+                bool isEmpty = _playerToFaceRequestes[i] == FACE_COUNT;
+                allEmpty = allEmpty && isEmpty;
+                someEmpty = someEmpty || isEmpty;
+            }
+            if(allEmpty) {
+                action::broadcast(action::Action{.type=GAME_DEF_ACTION_END, .payload=millis()});
+                _isEndInitiator = true;
+                timer::cancel();
+                stateCommon::handleStateChange(GAME_DEF_STATE_END);
+                return false;
+            }
+            if(someEmpty) {
+                _viewState = VIEW_STATE_ERROR;
+                timer::mark(800, handleViewNormalize);
+                return false;
             }
             action::broadcast(action::Action{.type=GAME_DEF_ACTION_PROGRESS, .payload = millis()});
             changeToProgress();
@@ -103,20 +128,13 @@ namespace stateBoard {
         return false;
     }
 
-    void loop(const stateCommon::LoopData& data){
+    void loop(const bool isEnter, const stateCommon::LoopData& data){
+        if(isEnter) {
+            handleEnter();
+        }
         updateView();
         processPlayerRequests(data);
         handleProgression(data);
-    }
-
-    void enter(){
-        _isError = false;
-        _moveIndex = PLAYER_LIMIT;
-        timestamp::clear();
-        buttonSingleClicked();
-        for(byte i = 0; i < PLAYER_LIMIT; i++) {
-            _playerToFaceRequestes[i] = FACE_COUNT;
-        }
     }
 
     void reset() {
@@ -153,5 +171,9 @@ namespace stateBoard {
             return PLAYER_LIMIT;
         }
         return value - 1;
+    }
+
+    bool isEndInitator(){
+        return _isEndInitiator;
     }
 }

@@ -3,7 +3,6 @@
 #include "game-def.h"
 #include "action.h"
 #include "global-events.h"
-#include "log.h"
 #include "distributed-task.h"
 
 namespace stateEnumerate {
@@ -12,30 +11,35 @@ namespace stateEnumerate {
     byte _totalEnumerations;
 
     byte enumerateHandler(const byte op, const byte payload) {
-        if(op == DISTRIBUTED_TASK_OP_PASSED_IN_NMOD) {
+        if(op == DISTRIBUTED_TASK_OP_PASSING_IN) {
             _enumeration = payload;
             _totalEnumerations = payload;
-            return;
+            return payload;
         }
         if(op == DISTRIBUTED_TASK_OP_PASSING_FORWARD) {
             return _totalEnumerations + 1;
         }
-        if(op == DISTRIBUTED_TASK_OP_PASSED_BACKWARD_NMOD) {
+        if(op == DISTRIBUTED_TASK_OP_PASSED_BACKWARD) {
             _totalEnumerations = payload;
-            return;
+            return payload;
         }
         if(op == DISTRIBUTED_TASK_OP_PASSING_BACKWARD) {
             return _totalEnumerations;
         }
-        if(op == DISTRIBUTED_TASK_OP_PASSED_DONE_NMOD) {
+        if(op == DISTRIBUTED_TASK_OP_PASSED_DONE) {
             _totalEnumerations = payload;
             stateCommon::handleStateChange(GAME_DEF_STATE_PLAYER_ASSIGN);
-            return;
+            return payload;
         }
         return payload;
     }
 
-    void loop(const stateCommon::LoopData& data){
+    void loop(bool isEnter, const stateCommon::LoopData& data){
+        if(isEnter) {
+            _totalEnumerations = 0;
+            _enumeration = 0;
+            distributedTask::reset();
+        }
         distributedTask::loop(data, GAME_DEF_ACTION_ENUMERATE_TASK, enumerateHandler);
         const byte taskState = distributedTask::getState();
         if(taskState == DISTRIBUTED_TASK_STATE_IDLE) {
@@ -43,17 +47,9 @@ namespace stateEnumerate {
             if(buttonSingleClicked()) {
                 distributedTask::init(GAME_DEF_ACTION_ENUMERATE_TASK, enumerateHandler, 0);
             }
-        } else if(taskState == DISTRIBUTED_TASK_STATE_PEND) {
-            animate::spin(WHITE, 4);
-        } else {
-            //spinner appears stopped
+            return;
         }
-    }
-
-    void enter(){
-        _totalEnumerations = 0;
-        _enumeration = 0;
-        distributedTask::reset();
+        animate::spin(WHITE, 4);
     }
 
     byte getTotalEnumerations(){

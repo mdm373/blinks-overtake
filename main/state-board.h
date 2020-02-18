@@ -5,8 +5,7 @@
     #include "state-common.h"
 
     namespace stateBoard {
-        void loop(const stateCommon::LoopData& data);
-        void enter();
+        void loop(const bool isEnter, const stateCommon::LoopData& data);
         void reset();
         void drawOwners();
         byte getRequestsForFace(const byte face, byte* playerBuffer);
@@ -14,6 +13,7 @@
         byte getOwnershipe(const byte face);
         byte getOffOwnershipe(const byte face);
         void updateOffOwners();
+        bool isEndInitator();
     }
     
 #endif

@@ -5,8 +5,7 @@
     #include "state-common.h"
 
     namespace stateEnumerate {
-        void loop(const stateCommon::LoopData& data);
-        void enter();
+        void loop(const bool isEnter, const stateCommon::LoopData& data);
         byte getTotalEnumerations();
         byte getMyEnumeration();
         

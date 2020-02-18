@@ -14,12 +14,10 @@
             const action::Action action;
         };
 
-        typedef void (*stateLoop)(const LoopData& LoopData);
-        typedef void (*stateAction)(void);
+        typedef void (*stateLoop)(bool isEnter, const LoopData& LoopData);
         
         void handleStateChange(const byte newState);
-        byte getCurrent();
-        void addState(const stateLoop loop, const stateAction enter, const byte stateIndex);
+        void addState(const stateLoop loop, const byte stateIndex);
         void loop(const LoopData& loopData);
         
     }

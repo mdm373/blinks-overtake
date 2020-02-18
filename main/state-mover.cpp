@@ -5,45 +5,27 @@
 #include "action.h"
 #include "state-enumerate.h"
 #include "game-def.h"
-#include "timestamp.h"
-
+#include "timer.h"
 namespace stateMover {
-    
-    //reusable
-    bool _hasSent;
+    bool _hasSent = false;
+    bool _showSending = false;
 
-    void updateView(){
-        if(timestamp::isClear()) {
-            animate::radiate(player::getMyColor(), 0, 6);
-            return;
-        }
-        
-        if(timestamp::getDuration() > 800) {
-            timestamp::clear();
-            return;
-        }
-        animate::spin(player::getMyColor(), 4);
+    void handleViewNormalize() {
+        _showSending = false;
     }
-
-    void loop(const stateCommon::LoopData& data) {
-        updateView();
-        if(!timestamp::isClear()){
-            return;
-        }
-        if(!_hasSent && !isValueReceivedOnFaceExpired(0)) {
-            _hasSent = true;
-            action::send(action::Action{.type=GAME_DEF_ACTION_MOVE_REQUEST, .payload = stateEnumerate::getMyEnumeration()}, 0);
-            timestamp::mark();
-            return;
-        }
-        if(_hasSent && isValueReceivedOnFaceExpired(0)) {
+    void loop(const bool isEnter, const stateCommon::LoopData& data) {
+        _hasSent = _hasSent && !isEnter;
+        if(isValueReceivedOnFaceExpired(0)) {
             _hasSent = false;
         }
         
-    }
-
-    void enter() {
-        _hasSent = false;
-        timestamp::clear();
+        animate::radiate(player::getColor(player::getCount()), 0, 6);
+        if(!isValueReceivedOnFaceExpired(0) && !_hasSent) {
+            _hasSent = true;
+            _showSending = true;
+            timer::mark(800, handleViewNormalize);
+            action::send(action::Action{.type=GAME_DEF_ACTION_MOVE_REQUEST, .payload = stateEnumerate::getMyEnumeration()}, 0);
+            return;
+        }        
     }
 }

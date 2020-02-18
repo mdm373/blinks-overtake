@@ -20,10 +20,8 @@ namespace player {
     }
 
     void add(const byte enumeration) {
-        if(_count < getMax()) {
-            _playerEnums[_count] = enumeration;
-            _count = _count + 1;
-        }
+        _playerEnums[_count] = enumeration;
+        _count = _count + 1;
     }
 
     bool hasEnum(const byte enumeration) {
@@ -47,9 +45,6 @@ namespace player {
     void reset() {
         _count = 0;
         _max = 0;
-        for(int i = 0; i < PLAYER_LIMIT; i++) {
-            _playerEnums[i] = 0;
-        }
     }
 
     byte getIndex(const byte enumeration) {
@@ -60,9 +55,5 @@ namespace player {
             }
         }
         return 255;
-    }
-
-    Color getMyColor(){
-        return getColor(getCount());
     }
 }

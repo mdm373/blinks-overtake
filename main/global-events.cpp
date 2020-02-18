@@ -1,5 +1,6 @@
 #include "global-events.h"
 #include "game-def.h"
+#include "timer.h"
 
 #pragma clang diagnostic ignored "-Wnarrowing"
 
@@ -14,20 +15,12 @@ namespace globalEvents {
             stateCommon::handleStateChange(GAME_DEF_STATE_DEFAULT);
             return true;
         }
-        if(action::isBroadcastRecieved(data.action, GAME_DEF_ACTION_FAIL)) {
-            stateCommon::handleStateChange(GAME_DEF_STATE_FAIL);
-            return true;
-        }
         return false;
     }
 
     void changeAllToReset(){
+        timer::cancel();
         action::broadcast(action::Action{.type=GAME_DEF_ACTION_RESET, .payload=millis()});
         stateCommon::handleStateChange(GAME_DEF_STATE_DEFAULT);
-    }
-
-    void changeAllToFail(){
-        action::broadcast(action::Action{.type=GAME_DEF_ACTION_FAIL, .payload=millis()});
-        stateCommon::handleStateChange(GAME_DEF_STATE_FAIL);
     }
 }

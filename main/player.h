@@ -15,6 +15,5 @@ namespace player {
     byte getIndex(const byte enumeration);
     void setMax(const byte max);
     void reset();
-    Color getMyColor();
 }
 #endif

@@ -4,12 +4,12 @@
     #include "state-common.h"
 
     namespace gameDef {
-        #define GAME_DEF_STATE_FAIL 0
-        #define GAME_DEF_STATE_ENUM_NONE 1
-        #define GAME_DEF_STATE_PLAYER_ASSIGN 2
-        #define GAME_DEF_STATE_MOVER 3
-        #define GAME_DEF_STATE_BOARD 4
-        #define GAME_DEF_STATE_PROGRESS 5
+        #define GAME_DEF_STATE_ENUM_NONE 0
+        #define GAME_DEF_STATE_PLAYER_ASSIGN 1
+        #define GAME_DEF_STATE_MOVER 2
+        #define GAME_DEF_STATE_BOARD 3
+        #define GAME_DEF_STATE_PROGRESS 4
+        #define GAME_DEF_STATE_END 5
         #define GAME_DEF_STATE_LENGTH 6
         #define GAME_DEF_STATE_DEFAULT GAME_DEF_STATE_ENUM_NONE
 
@@ -24,15 +24,17 @@
 
         #define GAME_DEF_ACTION_INVALID 0
         #define GAME_DEF_ACTION_RESET 1
-        #define GAME_DEF_ACTION_FAIL 2
-        #define GAME_DEF_ATION_STATE_CHG 3
-        #define GAME_DEF_ACTION_ENUMERATE_TASK 4 //5 6
-        #define GAME_DEF_ACTION_ASSGN_PLAYERS 7
-        #define GAME_DEF_ACTION_PLAYER_PICKED 8
-        #define GAME_DEF_ACTION_START 9
-        #define GAME_DEF_ACTION_MOVE_REQUEST 10
-        #define GAME_DEF_ACTION_MOVE_TAKEN 11
-        #define GAME_DEF_ACTION_PROGRESS 12
+        #define GAME_DEF_ATION_STATE_CHG 2
+        #define GAME_DEF_ACTION_ENUMERATE_TASK 3 //4 5
+        #define GAME_DEF_ACTION_ASSGN_PLAYERS 6
+        #define GAME_DEF_ACTION_PLAYER_PICKED 7
+        #define GAME_DEF_ACTION_START 8
+        #define GAME_DEF_ACTION_MOVE_REQUEST 9
+        #define GAME_DEF_ACTION_MOVE_TAKEN 10
+        #define GAME_DEF_ACTION_PROGRESS 11
+        #define GAME_DEF_ACTION_END 12
+        #define GAME_DEF_ACTION_TOTAL_OWNERSHIPE 13 //14 15
+        #define GAME_DEF_ACTION_NOOP 16
         
 
     }

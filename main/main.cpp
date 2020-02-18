@@ -5,26 +5,29 @@
 #include "game-def.h"
 #include "state-common.h"
 #include "state-enumerate.h"
-#include "state-fail.h"
 #include "state-player-assign.h"
 #include "state-mover.h"
 #include "state-board.h"
 #include "state-progress.h"
+#include "state-end.h"
+#include "timer.h"
 
 namespace _main_ {
     
     void setup() {
-        stateCommon::addState(stateFail::loop, nullptr, GAME_DEF_STATE_FAIL);
-        stateCommon::addState(stateEnumerate::loop, stateEnumerate::enter, GAME_DEF_STATE_ENUM_NONE);
-        stateCommon::addState(statePlayerAssign::loop, statePlayerAssign::enter, GAME_DEF_STATE_PLAYER_ASSIGN);
-        stateCommon::addState(stateMover::loop, stateMover::enter, GAME_DEF_STATE_MOVER);
-        stateCommon::addState(stateBoard::loop, stateBoard::enter, GAME_DEF_STATE_BOARD);
-        stateCommon::addState(stateProgress::loop, stateProgress::enter, GAME_DEF_STATE_PROGRESS);
+        
+        stateCommon::addState(stateEnumerate::loop, GAME_DEF_STATE_ENUM_NONE);
+        stateCommon::addState(statePlayerAssign::loop, GAME_DEF_STATE_PLAYER_ASSIGN);
+        stateCommon::addState(stateMover::loop, GAME_DEF_STATE_MOVER);
+        stateCommon::addState(stateBoard::loop, GAME_DEF_STATE_BOARD);
+        stateCommon::addState(stateProgress::loop, GAME_DEF_STATE_PROGRESS);
+        stateCommon::addState(stateEnd::loop, GAME_DEF_STATE_END);
         stateCommon::handleStateChange(GAME_DEF_STATE_DEFAULT);
     }
 
     
     void loop() {
+        timer::loop();
         FOREACH_FACE(face) {
             if(!isDatagramReadyOnFace(face)) {
                 continue;

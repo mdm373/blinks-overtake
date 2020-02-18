@@ -5,14 +5,15 @@ namespace action {
     byte cachedBroadcast[ACTION_LEN];
     void broadcast(const Action& action){
         encode(action, &cachedBroadcast[0]);
-        FOREACH_FACE(f) {
+        FOREACH_FACE(f){
             send(action, f);
         }
     }
 
-    Action getCachedBroadcast() {
-        return decode(&cachedBroadcast[0]);
+    void reset(){
+        encode(Action{.type=0, .payload=0}, &cachedBroadcast[0]);
     }
+
 
     bool send(const Action& action, const byte face){
         if(isValueReceivedOnFaceExpired(face)) {
@@ -29,7 +30,7 @@ namespace action {
     }
 
     bool isBroadcastRecieved(const Action& incoming, byte type){
-        const Action cached = getCachedBroadcast();
+        const Action cached = decode(&cachedBroadcast[0]);
         if(incoming.type == type && (cached.type != incoming.type || cached.payload != incoming.payload)) {
             broadcast(incoming);
             return true;

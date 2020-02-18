@@ -1,11 +1,11 @@
 
-#ifndef HEADER_STATE_PROGRESS
-    #define HEADER_STATE_PROGRESS
+#ifndef HEADER_STATE_END
+    #define HEADER_STATE_END
 
     #include "state-common.h"
 
-    namespace stateProgress {
+    namespace stateEnd {
         void loop(const bool isEnter, const stateCommon::LoopData& data);
+        void _totalInit();
     }
-
 #endif
