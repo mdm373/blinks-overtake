@@ -1,9 +1,19 @@
 # blinks-overtake 🎮
-| My first stab at writing a game for [blinks](https://blinks.games/)
+> My first stab at writing a game for [blinks](https://blinks.games/)
 
-[learn how to play](https://mdm373.github.io/blinks-overtake/)
+# Play 
 
-# developers
+## 🎯 [Watch & Learn](https://mdm373.github.io/blinks-overtake/)
+
+## 📝 Step By Step
+*join all blinks together and double one at any time to reset*
+
+1) when reset blinks should slowly pulse white
+
+
+
+
+# Develop
 
 ## Requirements
 * [ArduinoIDE](https://www.arduino.cc/en/Guide/HomePage)
@@ -27,7 +37,7 @@ sh ./scripts/test.sh
 ```
 
 
-## Memory Notes
+## Global Memory Notes
 
 * Empty Sketch: 334 bytes
 * Low Memory Warning: 256
