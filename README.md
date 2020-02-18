@@ -6,10 +6,11 @@
 ## 🎯 [Watch & Learn](https://mdm373.github.io/blinks-overtake/)
 
 ## 📝 Step By Step
-*Join all blinks together and double one at any time to reset and start over*
 
 1) Join all blinks together and double tap any one to form the board. This step can be done at anytime to start over. The board should now be slowly pulsing white.
+
 2) Single tap a a blink on the board. The board will spin white for a few seconds while it sets up before switching to the first player's color (orange)
+
 3) One player at a time, remove a single blink from the board. This is the player's token and they should hang onto it. Wait for the board to change to the next player color before the next token is removed. 
 
 > Do not remove any blink that would break the board apart
