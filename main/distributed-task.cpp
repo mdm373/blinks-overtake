@@ -1,22 +1,15 @@
 #include "distributed-task.h"
-#include "action.h"
-#include "state-common.h"
-#include "global-events.h"
 
 namespace distributedTask {
     
-    #define NIL_VALUE  0b11111100
     #define RESP_TYPE_OFFSET 1
     #define DONE_TYPE_OFFSET 2
     
-
     byte _incomingFace = FACE_COUNT;
     byte _outgoingFace = 0;
     byte _state = DISTRIBUTED_TASK_STATE_IDLE;
-    byte _taskValue;
     
     void reset() {
-        _taskValue = 0;
         _state = DISTRIBUTED_TASK_STATE_IDLE;
         _incomingFace = FACE_COUNT;
         _outgoingFace = 0;
@@ -24,40 +17,37 @@ namespace distributedTask {
     
     bool respondHandled(const stateCommon::LoopData& data, const byte requestType, taskHandler& handler){
         if (data.action.type == requestType) {
-            action::send(action::Action{.type = static_cast<byte>(requestType+RESP_TYPE_OFFSET), .payload=NIL_VALUE}, data.face);
+            action::send(action::Action{.type = static_cast<byte>(requestType+RESP_TYPE_OFFSET), .payload=data.action.payload}, data.face);
             return true;
         }
         return false;
     }
 
-    void sendBack(const byte requestType, taskHandler& handler) {
+    void sendBack(const byte requestType, taskHandler& handler, byte taskValue) {
         if(_incomingFace < FACE_COUNT) {
-            _taskValue = handler(DISTRIBUTED_TASK_OP_PASSING_BACKWARD, _taskValue);
-            const bool sent = action::send(action::Action{.type = static_cast<byte>(requestType+RESP_TYPE_OFFSET), .payload=_taskValue}, _incomingFace);
+            const bool sent = action::send(action::Action{.type = static_cast<byte>(requestType+RESP_TYPE_OFFSET), .payload=taskValue}, _incomingFace);
             _state = DISTRIBUTED_TASK_STATE_DONE;
             return;
         }
-        action::broadcast(action::Action{.type = static_cast<byte>(requestType+DONE_TYPE_OFFSET), .payload= _taskValue});
-        byte value = _taskValue;
+        action::broadcast(action::Action{.type = static_cast<byte>(requestType+DONE_TYPE_OFFSET), .payload= taskValue});
         reset();
-        handler(DISTRIBUTED_TASK_OP_PASSED_DONE, value);
+        handler(DISTRIBUTED_TASK_OP_PASSED_DONE, taskValue);
     }
 
-    void sendAroundThenBack(const byte requestType, taskHandler& handler) {
+    void sendAroundThenBack(const byte requestType, taskHandler& handler, byte taskValue) {
         bool sent = false;
         while(sent == false && _outgoingFace < FACE_COUNT) {
             if(_outgoingFace == _incomingFace) {
                 _outgoingFace = _outgoingFace + 1;
                 continue;    
             }
-            _taskValue = handler(DISTRIBUTED_TASK_OP_PASSING_FORWARD, _taskValue);
-            sent = action::send(action::Action{.type = requestType, .payload=_taskValue}, _outgoingFace);
+            sent = action::send(action::Action{.type = requestType, .payload=taskValue}, _outgoingFace);
             if(!sent){
                 _outgoingFace = _outgoingFace + 1;
             }
         }
         if(!sent) {
-            sendBack(requestType, handler);
+            sendBack(requestType, handler, taskValue);
             return;
         }
         _state = DISTRIBUTED_TASK_STATE_PEND;
@@ -67,8 +57,8 @@ namespace distributedTask {
     void init(const byte requestType, taskHandler& handler, byte payload) {
         _incomingFace = FACE_COUNT;
         _outgoingFace = 0;
-        _taskValue = handler(DISTRIBUTED_TASK_OP_PASSING_IN, payload);
-        sendAroundThenBack(requestType, handler);
+        byte taskValue = handler(DISTRIBUTED_TASK_OP_PASSING_IN, payload);
+        sendAroundThenBack(requestType, handler, taskValue);
     }
 
     void loopIdle(const stateCommon::LoopData& data, const byte requestType, taskHandler& handler){
@@ -77,8 +67,8 @@ namespace distributedTask {
         }
         _incomingFace = data.face;
         _outgoingFace = 0;
-        _taskValue = handler(DISTRIBUTED_TASK_OP_PASSING_IN, data.action.payload);
-        sendAroundThenBack(requestType, handler);
+        byte taskValue = handler(DISTRIBUTED_TASK_OP_PASSING_IN, data.action.payload);
+        sendAroundThenBack(requestType, handler, taskValue);
     }
 
     void loopPending(const stateCommon::LoopData& data, const byte requestType, taskHandler& handler){
@@ -90,10 +80,7 @@ namespace distributedTask {
             return;
         }
         _outgoingFace = _outgoingFace + 1;
-        if(data.action.payload != NIL_VALUE) {
-            _taskValue = handler(DISTRIBUTED_TASK_OP_PASSED_BACKWARD, data.action.payload);
-        }
-        sendAroundThenBack(requestType, handler);
+        sendAroundThenBack(requestType, handler, data.action.payload);
 
     }
 

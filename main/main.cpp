@@ -15,7 +15,6 @@
 namespace _main_ {
     
     void setup() {
-        
         stateCommon::addState(stateEnumerate::loop, GAME_DEF_STATE_ENUM_NONE);
         stateCommon::addState(statePlayerAssign::loop, GAME_DEF_STATE_PLAYER_ASSIGN);
         stateCommon::addState(stateMover::loop, GAME_DEF_STATE_MOVER);
@@ -41,11 +40,13 @@ namespace _main_ {
             markDatagramReadOnFace(face);
             stateCommon::LoopData data{.face=face, .action=action};
             if(!globalEvents::isHandled(data)) {
+                timer::cancel();
                 stateCommon::loop(data);
             }
         }
         stateCommon::LoopData empty{.face=FACE_COUNT, .action=action::Action{.type=GAME_DEF_ACTION_INVALID}};
         if(!globalEvents::isHandled(empty)) {
+            timer::cancel();
             stateCommon::loop(empty);
         }
         

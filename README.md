@@ -1,5 +1,10 @@
-# blinks-overtake 🎮
+# Overtake 
 > My first stab at writing a game for [blinks](https://blinks.games/)
+
+
+| Number of Blinks | Number of Players | Duration of Gameplay | Recommended Ages |
+|:----------------:|:-----------------:|:--------------------:|:----------------:|
+| 4 - 62           | 2-4               |  10 - 30 minutes     | 12 & Up          |
 
 # Play 
 
@@ -21,13 +26,15 @@
 
 > There must be at least two blinks on the board
 
-> If at any point while picking players something goes wrong and a token or the board's colors dont line up, go back to step one and
+> If at any point while picking players something goes wrong and a token or the board's colors don't line up, go back to step one.
 
-4) Once four players have taken their tokens or no more tokens can be removed the board will turn dark. Decide on a player order, and have all players close their eyes.
+4) Once at least two players have taken their tokens decide on a player order and click the board. The board should now be dark and all players should close their eyes.
 
-5) One at a time each player should connect their token to an unoccupied / dark face on the board edge. The board will blink your color on that edge space to confirm your move and then go dark once again. Announce to the next player that they can move and close your eyes.
+> The board will also go dark if four players have been reached or if there are only two tokens remaining on the board
 
-6) Once all players have moved, everyone open your eyes and tap one blink on the board to reveal each players move
+5) One at a time, open your eyes and make your move by connecting your token to an unoccupied / dark face on the board edge. The board will blink your color on that edge space to confirm and then go dark once again. Announce to the next player that they can move and close your eyes.
+
+6) Once all players have moved, everyone open your eyes and tap one blink on the board to reveal each player's move
 
 | The board will pulse for two seconds showing each players move, players who chose the same space will alternate blinking one anothers colors and turn off
 

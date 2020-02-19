@@ -3,7 +3,7 @@
 #include "game-def.h"
 #include "player.h"
 #include "timer.h"
-#include "state-enumerate.h"
+
 #pragma clang diagnostic ignored "-Wnarrowing"
 
 namespace stateBoard {

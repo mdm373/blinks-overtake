@@ -8,7 +8,6 @@
 #include "state-board.h"
 namespace statePlayerAssign{
     
-    //reusable
     byte _neighborAssigns[FACE_COUNT];
     byte _pickFace;
     bool isError;
