@@ -13,8 +13,8 @@ namespace stateBoard {
     #define VIEW_STATE_ERROR 1
     #define VIEW_STATE_RADIATE 2
     
-    byte _ownershipe[FACE_COUNT];
-    byte _playerToFaceRequestes[PLAYER_LIMIT];
+    byte _ownership[FACE_COUNT];
+    byte _playerToFaceRequests[PLAYER_LIMIT];
     bool _isEndInitiator;
 
     //reusable
@@ -27,23 +27,23 @@ namespace stateBoard {
         _viewState = VIEW_STATE_NORMAL;
         buttonSingleClicked();
         for(byte i = 0; i < PLAYER_LIMIT; i++) {
-            _playerToFaceRequestes[i] = FACE_COUNT;
+            _playerToFaceRequests[i] = FACE_COUNT;
         }
     }
 
     void updateOffOwners(){
         FOREACH_FACE(f){
-            setValueSentOnFace(_ownershipe[f]+1, f);
+            setValueSentOnFace(_ownership[f]+1, f);
         }
     }
 
     void drawOwners() {
         FOREACH_FACE(f) {
-            if(_ownershipe[f] == PLAYER_LIMIT) {
+            if(_ownership[f] == PLAYER_LIMIT) {
                 setColorOnFace(OFF, f);
                 continue;
             }
-            setColorOnFace(player::getColor(_ownershipe[f]), f);
+            setColorOnFace(player::getColor(_ownership[f]), f);
         }
     }
 
@@ -53,7 +53,7 @@ namespace stateBoard {
             return;
         }
         if(_viewState == VIEW_STATE_RADIATE) {
-            animate::radiate(player::getColor(_moveIndex), _playerToFaceRequestes[_moveIndex], 1);
+            animate::radiate(player::getColor(_moveIndex), _playerToFaceRequests[_moveIndex], 1);
             return;
         }
         drawOwners();
@@ -63,18 +63,18 @@ namespace stateBoard {
         _viewState = VIEW_STATE_NORMAL;
     }
     void processPlayerRequests(const stateCommon::LoopData& data){
-        if(action::isBroadcastRecieved(data.action, GAME_DEF_ACTION_MOVE_TAKEN)) {
-            _playerToFaceRequestes[data.action.payload] = FACE_ELSEWHERE;
+        if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_MOVE_TAKEN)) {
+            _playerToFaceRequests[data.action.payload] = FACE_ELSEWHERE;
         }
         if(data.action.type == GAME_DEF_ACTION_MOVE_REQUEST && timer::runningFor()  == 0) {
             _moveIndex = player::getIndex(data.action.payload);
             timer::mark(800, handleViewNormalize);
-            if(_playerToFaceRequestes[_moveIndex] != FACE_COUNT || _ownershipe[data.face] != PLAYER_LIMIT) {
+            if(_playerToFaceRequests[_moveIndex] != FACE_COUNT || _ownership[data.face] != PLAYER_LIMIT) {
                 _viewState = VIEW_STATE_ERROR;
                 return;
             }
             _viewState = VIEW_STATE_RADIATE;
-            _playerToFaceRequestes[_moveIndex] = data.face;
+            _playerToFaceRequests[_moveIndex] = data.face;
             action::broadcast(action::Action{.type=GAME_DEF_ACTION_MOVE_TAKEN, .payload=_moveIndex});
         }
     }
@@ -92,11 +92,11 @@ namespace stateBoard {
     }
 
     bool handleProgression(const stateCommon::LoopData& data){
-        if(action::isBroadcastRecieved(data.action, GAME_DEF_ACTION_PROGRESS)) {
+        if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_PROGRESS)) {
             changeToProgress();
             return true;
         }
-        if(action::isBroadcastRecieved(data.action, GAME_DEF_ACTION_END)) {
+        if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_END)) {
             timer::cancel();
             stateCommon::handleStateChange(GAME_DEF_STATE_END);
             return true;
@@ -105,7 +105,7 @@ namespace stateBoard {
             bool allEmpty = true;
             bool someEmpty = false;
             for(byte i =0; i < player::getCount(); i++) {
-                bool isEmpty = _playerToFaceRequestes[i] == FACE_COUNT;
+                bool isEmpty = _playerToFaceRequests[i] == FACE_COUNT;
                 allEmpty = allEmpty && isEmpty;
                 someEmpty = someEmpty || isEmpty;
             }
@@ -139,14 +139,14 @@ namespace stateBoard {
 
     void reset() {
         FOREACH_FACE(f){
-            _ownershipe[f] = PLAYER_LIMIT;
+            _ownership[f] = PLAYER_LIMIT;
         }
     }
 
     byte getRequestsForFace(const byte face, byte* playerBuffer) {
         byte count = 0;
         for(byte i = 0; i < PLAYER_LIMIT; i++) {
-            if(_playerToFaceRequestes[i] == face){
+            if(_playerToFaceRequests[i] == face){
                 playerBuffer[count] = i;
                 count++;
             }
@@ -155,14 +155,14 @@ namespace stateBoard {
     }
 
     void applyOwner(const byte face, const byte playerIndex) {
-        _ownershipe[face] = playerIndex;
+        _ownership[face] = playerIndex;
     }
 
-    byte getOwnershipe(const byte face){
-        return _ownershipe[face];
+    byte getOwnership(const byte face){
+        return _ownership[face];
     }
 
-    byte getOffOwnershipe(const byte face) {
+    byte getOffOwnership(const byte face) {
         if(isValueReceivedOnFaceExpired(face)) {
             return PLAYER_LIMIT;
         }
@@ -173,7 +173,7 @@ namespace stateBoard {
         return value - 1;
     }
 
-    bool isEndInitator(){
+    bool isEndInitiator(){
         return _isEndInitiator;
     }
 }

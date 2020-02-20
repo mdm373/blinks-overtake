@@ -16,7 +16,7 @@
         bool send(const Action& action, const byte face);
         void reset();
         void broadcastEmpty(const byte type);
-        bool isBroadcastRecieved(const Action& action, const byte type);
+        bool isBroadcastReceived(const Action& action, const byte type);
         void encode(const Action& action, byte* buffer);
         Action decode(const byte* buffer);
 }

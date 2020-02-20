@@ -15,7 +15,7 @@ namespace globalEvents {
             changeAllToReset();
             return true;
         } 
-        if(action::isBroadcastRecieved(data.action, GAME_DEF_ACTION_RESET)) {
+        if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_RESET)) {
             stateCommon::handleStateChange(GAME_DEF_STATE_DEFAULT);
             return true;
         }

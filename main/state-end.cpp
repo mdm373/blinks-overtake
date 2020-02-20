@@ -17,7 +17,7 @@ namespace stateEnd {
         if(op == DISTRIBUTED_TASK_OP_PASSING_IN) {
             byte count = payload;
             FOREACH_FACE(f){
-                if(stateBoard::getOwnershipe(f) == _playerIndex){
+                if(stateBoard::getOwnership(f) == _playerIndex){
                     count++;
                 }
             }
@@ -26,7 +26,7 @@ namespace stateEnd {
         if(op == DISTRIBUTED_TASK_OP_PASSED_DONE) {
             _playerTotals[_playerIndex] = payload;
             _playerIndex++;
-            if(_playerIndex < player::getCount() && stateBoard::isEndInitator()){
+            if(_playerIndex < player::getCount() && stateBoard::isEndInitiator()){
                 timer::mark(MSG_DELAY, _totalInit);
                 return payload;
             }
@@ -48,18 +48,18 @@ namespace stateEnd {
     }
     
     void _totalInit() {
-        distributedTask::init(GAME_DEF_ACTION_TOTAL_OWNERSHIPE, totalHandler, 0);
+        distributedTask::init(GAME_DEF_ACTION_TOTAL_OWNERSHIP, totalHandler, 0);
     }
 
     void loop(const bool isEnter, const stateCommon::LoopData& data){
         if(isEnter) {
             _winner = PLAYER_LIMIT + 1;
             _playerIndex = 0;
-            if(stateBoard::isEndInitator()){
+            if(stateBoard::isEndInitiator()){
                 timer::mark(MSG_DELAY, _totalInit);
             }
         }
-        distributedTask::loop(data, GAME_DEF_ACTION_TOTAL_OWNERSHIPE, totalHandler);
+        distributedTask::loop(data, GAME_DEF_ACTION_TOTAL_OWNERSHIP, totalHandler);
         if(_winner > PLAYER_LIMIT) {
             animate::spin(RED, 4);
             return;
