@@ -14,7 +14,6 @@ namespace action {
         encode(Action{.type=0, .payload=0}, &cachedBroadcast[0]);
     }
 
-
     bool send(const Action& action, const byte face){
         if(isValueReceivedOnFaceExpired(face)) {
             return false;

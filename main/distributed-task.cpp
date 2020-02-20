@@ -14,6 +14,12 @@ namespace distributedTask {
         _incomingFace = FACE_COUNT;
         _outgoingFace = 0;
     }
+
+    void sendAllDone(byte requestType, byte taskValue){
+        FOREACH_FACE(f){
+            action::send(action::Action{.type = static_cast<byte>(requestType+DONE_TYPE_OFFSET), .payload= taskValue}, f);
+        }
+    }
     
     bool respondHandled(const stateCommon::LoopData& data, const byte requestType, taskHandler& handler){
         if (data.action.type == requestType) {
@@ -29,7 +35,7 @@ namespace distributedTask {
             _state = DISTRIBUTED_TASK_STATE_DONE;
             return;
         }
-        action::broadcast(action::Action{.type = static_cast<byte>(requestType+DONE_TYPE_OFFSET), .payload= taskValue});
+        sendAllDone(requestType, taskValue);
         reset();
         handler(DISTRIBUTED_TASK_OP_PASSED_DONE, taskValue);
     }
@@ -89,7 +95,8 @@ namespace distributedTask {
             return;
         }
         
-        if (action::isBroadcastRecieved(data.action, requestType+DONE_TYPE_OFFSET)) {
+        if (data.action.type == requestType+DONE_TYPE_OFFSET) {
+            sendAllDone(requestType, data.action.payload);
             reset();
             handler(DISTRIBUTED_TASK_OP_PASSED_DONE, data.action.payload);
         }

@@ -31,25 +31,24 @@ namespace stateEnumerate {
 
     void loop(bool isEnter, const stateCommon::LoopData& data){
         if(isEnter) {
-            _error = true;
+            _error = false;
             _totalEnumerations = 0;
             _enumeration = 0;
             distributedTask::reset();
             buttonSingleClicked();
         }
+        if(_error) {
+            animate::pulse(RED, 4);
+            return;
+        } 
         distributedTask::loop(data, GAME_DEF_ACTION_ENUMERATE_TASK, enumerateHandler);
-        const byte taskState = distributedTask::getState();
-        if(taskState == DISTRIBUTED_TASK_STATE_IDLE) {
+        if(distributedTask::getState() == DISTRIBUTED_TASK_STATE_IDLE) {
             animate::pulse(WHITE, 8);
             if(buttonSingleClicked()) {
                 distributedTask::init(GAME_DEF_ACTION_ENUMERATE_TASK, enumerateHandler, 0);
             }
             return;
         }
-        if(_error) {
-            animate::pulse(RED, 4);
-            return;
-        } 
         animate::spin(WHITE, 4);
     }
 

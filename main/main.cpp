@@ -40,13 +40,11 @@ namespace _main_ {
             markDatagramReadOnFace(face);
             stateCommon::LoopData data{.face=face, .action=action};
             if(!globalEvents::isHandled(data)) {
-                timer::cancel();
                 stateCommon::loop(data);
             }
         }
         stateCommon::LoopData empty{.face=FACE_COUNT, .action=action::Action{.type=GAME_DEF_ACTION_INVALID}};
         if(!globalEvents::isHandled(empty)) {
-            timer::cancel();
             stateCommon::loop(empty);
         }
         

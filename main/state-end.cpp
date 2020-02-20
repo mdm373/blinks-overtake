@@ -26,7 +26,6 @@ namespace stateEnd {
         if(op == DISTRIBUTED_TASK_OP_PASSED_DONE) {
             _playerTotals[_playerIndex] = payload;
             _playerIndex++;
-            action::reset();
             if(_playerIndex < player::getCount() && stateBoard::isEndInitator()){
                 timer::mark(MSG_DELAY, _totalInit);
                 return payload;
