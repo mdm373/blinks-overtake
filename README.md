@@ -31,7 +31,7 @@ Upload via one of the following methods...
 
 4) **Click the board and all have all players close their eyes.** The board should now be dark. The board will automatically go dark after 4 players have taken their tokens or if it goes down to 2 blinks. No clicking required.
 
-5) **Clockwise, one player at a time, open your eyes and make your move by connecting your token to an unoccupied (dark) face.**. Connect the token using its radiating "active" side. The board will blink your color on that face to confirm and then go dark once again. Announce to the next player that they can move and close your eyes.
+5) **Clockwise, one player at a time, open your eyes and make your move by connecting your token to an unoccupied (dark) face.** Connect the token using its radiating "active" side. The board will blink your color on that face to confirm and then go dark once again. Announce to the next player that they can move and close your eyes.
 
 6) **Once all players have moved, everyone should open their eyes. Tap a single blink on the board**. The board will blink for a few seconds showing the space for each player's new move and then spread player occupied space outwards.
     - ✅ **Overtaken**: Spaces requested by only a single player token will be overtaken. They will pulse the requesting player's color. The space is now occupied by that player.
@@ -40,7 +40,7 @@ Upload via one of the following methods...
     - ⬅️⬆️➡️ All occupied spaces will then spread their player color outwards. Spaces spread by occupying dark neighbors if a majority of that neighbor's edges are unoccupied or owned by one player.
     - 🏘️ Face spaces on the board are **neighbors** if they are adjacent to one another on the same blink or connected adjacently between two blinks.
 
-7) **Go back to step 5** if no players admit defeat and there are still unoccupied board edges for players to take moves on.
+7) **Go back to step 4** if no players admit defeat and there are still unoccupied board edges for players to take moves on.
 
 8) **Otherwise, tap the board once before any player moves.** The board will spin red for a few seconds while it totals up the number of spaces occupied by each player. It will then flash the color of the winning player (the one with the most spaces). In the event of a tie it will slowly pulse red.
 
