@@ -20,7 +20,7 @@
   - Assumes Blinks SDK installed under `~/Documents/Arduino/hardware/Move38-Blinks-Library`
 
 ### 📝 Step By Step
-pwd
+
 1) **Join at least 4 blinks together and double tap any one to form the board.** This step can be done at anytime to start over. The board should now be slowly pulsing white.
 
 2) **Single tap any blink on the board.** The board will spin white for a few seconds while it sets up before switching to the first player's color (orange)
