@@ -37,14 +37,14 @@ namespace statePlayerAssign{
             action::broadcast(action::Action{.type=GAME_DEF_ACTION_START, .payload=(byte)millis()});
             return;
         }
-        if(action::isBroadcastRecieved(action, GAME_DEF_ACTION_START)) {
+        if(action::isBroadcastReceived(action, GAME_DEF_ACTION_START)) {
             handleToBoardState();
             return;
         }
     }
 
     void handlePlayerPicked(const action::Action& action){
-        if(action::isBroadcastRecieved(action, GAME_DEF_ACTION_PLAYER_PICKED)){
+        if(action::isBroadcastReceived(action, GAME_DEF_ACTION_PLAYER_PICKED)){
             player::add(action.payload);
             _pickFace = FACE_COUNT;
             timer::cancel();

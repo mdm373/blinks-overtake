@@ -10,10 +10,10 @@
         void drawOwners();
         byte getRequestsForFace(const byte face, byte* playerBuffer);
         void applyOwner(const byte face, const byte playerIndex);
-        byte getOwnershipe(const byte face);
-        byte getOffOwnershipe(const byte face);
+        byte getOwnership(const byte face);
+        byte getOffOwnership(const byte face);
         void updateOffOwners();
-        bool isEndInitator();
+        bool isEndInitiator();
     }
     
 #endif

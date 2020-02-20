@@ -28,7 +28,7 @@ namespace action {
         broadcast(Action{.type = type, .payload=0});
     }
 
-    bool isBroadcastRecieved(const Action& incoming, byte type){
+    bool isBroadcastReceived(const Action& incoming, byte type){
         const Action cached = decode(&cachedBroadcast[0]);
         if(incoming.type == type && (cached.type != incoming.type || cached.payload != incoming.payload)) {
             broadcast(incoming);

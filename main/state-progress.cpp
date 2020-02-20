@@ -29,9 +29,9 @@ namespace stateProgress {
     }
 
     void popBloomFaceBuffer(byte f) {
-        byte priorOwner = stateBoard::getOwnershipe( (FACE_COUNT + f + 1) % FACE_COUNT);
-        byte nextOwner = stateBoard::getOwnershipe( (FACE_COUNT + f - 1) % FACE_COUNT);
-        byte offOwner = stateBoard::getOffOwnershipe(f);
+        byte priorOwner = stateBoard::getOwnership( (FACE_COUNT + f + 1) % FACE_COUNT);
+        byte nextOwner = stateBoard::getOwnership( (FACE_COUNT + f - 1) % FACE_COUNT);
+        byte offOwner = stateBoard::getOffOwnership(f);
         //Two match, they win!
         if(priorOwner < PLAYER_LIMIT && (priorOwner == nextOwner || priorOwner == offOwner)) {
             _faceBuffer[f] = priorOwner;
@@ -59,7 +59,7 @@ namespace stateProgress {
     static void popBloomFaces(){
         FOREACH_FACE(f){
             _faceBuffer[f] = PLAYER_LIMIT;
-            if(stateBoard::getOwnershipe(f) >= PLAYER_LIMIT) {
+            if(stateBoard::getOwnership(f) >= PLAYER_LIMIT) {
                 popBloomFaceBuffer(f);
             }
         }
