@@ -35,7 +35,7 @@ namespace stateEnumerate {
             _totalEnumerations = 0;
             _enumeration = 0;
             distributedTask::reset();
-            buttonSingleClicked();
+            buttonDoubleClicked();
         }
         if(_error) {
             animate::pulse(RED, 4);
@@ -44,7 +44,7 @@ namespace stateEnumerate {
         distributedTask::loop(data, GAME_DEF_ACTION_ENUMERATE_TASK, enumerateHandler);
         if(distributedTask::getState() == DISTRIBUTED_TASK_STATE_IDLE) {
             animate::pulse(WHITE, 8);
-            if(buttonSingleClicked()) {
+            if(buttonDoubleClicked()) {
                 distributedTask::init(GAME_DEF_ACTION_ENUMERATE_TASK, enumerateHandler, 0);
             }
             return;

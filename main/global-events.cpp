@@ -11,7 +11,7 @@ namespace globalEvents {
     }
 
     bool isHandled(const stateCommon::LoopData& data){
-        if(buttonDoubleClicked()) {
+        if(buttonLongPressed()) {
             changeAllToReset();
             return true;
         } 
