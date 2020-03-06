@@ -26,6 +26,7 @@ namespace stateBoard {
         _moveIndex = 0;
         _viewState = VIEW_STATE_NORMAL;
         buttonSingleClicked();
+        buttonDoubleClicked();
         for(byte i = 0; i < PLAYER_LIMIT; i++) {
             _playerToFaceRequests[i] = FACE_COUNT;
         }
@@ -101,24 +102,17 @@ namespace stateBoard {
             stateCommon::handleStateChange(GAME_DEF_STATE_END);
             return true;
         }
-        if(buttonSingleClicked()){
+        if(buttonDoubleClicked()){
             bool allEmpty = true;
-            bool someEmpty = false;
             for(byte i =0; i < player::getCount(); i++) {
                 bool isEmpty = _playerToFaceRequests[i] == FACE_COUNT;
                 allEmpty = allEmpty && isEmpty;
-                someEmpty = someEmpty || isEmpty;
             }
             if(allEmpty) {
                 action::broadcast(action::Action{.type=GAME_DEF_ACTION_END, .payload=millis()});
                 _isEndInitiator = true;
                 timer::cancel();
                 stateCommon::handleStateChange(GAME_DEF_STATE_END);
-                return false;
-            }
-            if(someEmpty) {
-                _viewState = VIEW_STATE_ERROR;
-                timer::mark(800, handleViewNormalize);
                 return false;
             }
             action::broadcast(action::Action{.type=GAME_DEF_ACTION_PROGRESS, .payload = millis()});

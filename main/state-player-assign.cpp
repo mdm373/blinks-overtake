@@ -27,7 +27,7 @@ namespace statePlayerAssign{
             handleToBoardState();
             return;
         }
-        if(buttonSingleClicked()) {
+        if(buttonDoubleClicked()) {
             if(player::getCount() < 2) {
                 timer::mark(700, stopError);
                 isError = true;
@@ -94,7 +94,7 @@ namespace statePlayerAssign{
     void loop(const bool isEnter, const stateCommon::LoopData& data){
         if(isEnter) {
             isError = false;
-            buttonSingleClicked(); //clear cache state
+            buttonDoubleClicked(); //clear cache state
             _pickFace = FACE_COUNT;
             FOREACH_FACE(f) {
                 _neighborAssigns[f] = STATE_ENUMERATE_MAX;
