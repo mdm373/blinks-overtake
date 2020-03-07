@@ -3,9 +3,6 @@
 #pragma clang diagnostic ignored "-Wnarrowing"
 
 namespace animate {
-
-    DOUBLE_BYTE _fadeStart = 0;
-
     void pulse(Color c, byte rate) {
         byte b = sin8_C(millis()/rate);
         setColor(dim(c, b));
@@ -49,14 +46,5 @@ namespace animate {
         setColorOnFace(marker, face);
         pulseOffsetFace((face + 1) % FACE_COUNT                 , marker, -63, rate);
         pulseOffsetFace((FACE_COUNT + face - 1) % FACE_COUNT    , marker, -63, rate);
-    }
-
-    void startFade() {
-        _fadeStart = millis();
-    }
-
-    void fadeFace(const Color c, const DOUBLE_BYTE duration, const byte face) {
-        DOUBLE_BYTE periodToBright = 25500 / duration;
-        setColorOnFace(dim(c,  ((millis() - _fadeStart) * periodToBright)/100), face);
     }
 }
