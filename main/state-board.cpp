@@ -15,6 +15,7 @@ namespace stateBoard {
     
     byte _ownership[FACE_COUNT];
     byte _playerToFaceRequests[PLAYER_LIMIT];
+    byte _lastFace;
     bool _isEndInitiator;
 
     //reusable
@@ -41,7 +42,7 @@ namespace stateBoard {
     void drawOwners() {
         FOREACH_FACE(f) {
             if(_ownership[f] == PLAYER_LIMIT) {
-                setColorOnFace(OFF, f);
+                setColorOnFace(dim(WHITE, 40), f);
                 continue;
             }
             setColorOnFace(player::getColor(_ownership[f]), f);
@@ -61,6 +62,7 @@ namespace stateBoard {
     }
 
     void handleViewNormalize(){
+        action::send(action::Action{.type=GAME_DEF_ACTION_MOVE_RESPONSE, .payload = _viewState == VIEW_STATE_ERROR ? 0 : 1}, _lastFace);
         _viewState = VIEW_STATE_NORMAL;
     }
     void processPlayerRequests(const stateCommon::LoopData& data){
@@ -68,9 +70,11 @@ namespace stateBoard {
             _playerToFaceRequests[data.action.payload] = FACE_ELSEWHERE;
         }
         if(data.action.type == GAME_DEF_ACTION_MOVE_REQUEST && timer::runningFor()  == 0) {
+            _lastFace = data.face;
             _moveIndex = player::getIndex(data.action.payload);
             timer::mark(800, handleViewNormalize);
-            if(_playerToFaceRequests[_moveIndex] != FACE_COUNT || _ownership[data.face] != PLAYER_LIMIT) {
+            bool isInvalid = _playerToFaceRequests[_moveIndex] != FACE_COUNT || _ownership[data.face] != PLAYER_LIMIT;
+            if(isInvalid) {
                 _viewState = VIEW_STATE_ERROR;
                 return;
             }

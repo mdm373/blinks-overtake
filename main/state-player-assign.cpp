@@ -6,112 +6,89 @@
 #include "animate.h"
 #include "timer.h"
 #include "state-board.h"
+
+#pragma clang diagnostic ignored "-Wnarrowing"
+
 namespace statePlayerAssign{
     
-    byte _neighborAssigns[FACE_COUNT];
-    byte _pickFace;
-    bool isError;
-
-
-    void handleToBoardState(){
-        stateBoard::reset();
-        timer::cancel();
-        stateCommon::handleStateChange(GAME_DEF_STATE_BOARD);
-    }
-
-    void stopError() {
-        isError = false;
-    }
-    void handleSwitchToBoard(const action::Action& action) {
-        if(player::getCount() == player::getMax()) {
-            handleToBoardState();
-            return;
-        }
-        if(buttonDoubleClicked()) {
-            if(player::getCount() < 2) {
-                timer::mark(700, stopError);
-                isError = true;
-                return;
-            }
-            handleToBoardState();
-            action::broadcast(action::Action{.type=GAME_DEF_ACTION_START, .payload=(byte)millis()});
-            return;
-        }
-        if(action::isBroadcastReceived(action, GAME_DEF_ACTION_START)) {
-            handleToBoardState();
-            return;
-        }
-    }
-
-    void handlePlayerPicked(const action::Action& action){
-        if(action::isBroadcastReceived(action, GAME_DEF_ACTION_PLAYER_PICKED)){
-            player::add(action.payload);
-            _pickFace = FACE_COUNT;
-            timer::cancel();
-            FOREACH_FACE(f){
-                if(_neighborAssigns[f] == action.payload) {
-                    _neighborAssigns[f] = STATE_ENUMERATE_MAX;
-                }
-            }
-        }
-    }
-
-    void handleDelayedPick() {
-        if(isAlone()){
-            stateCommon::handleStateChange(GAME_DEF_STATE_MOVER);
-            return;
-        }
-        if(player::hasEnum(_neighborAssigns[_pickFace])){
-            _neighborAssigns[_pickFace] = STATE_ENUMERATE_MAX;
-            _pickFace = FACE_COUNT;
-            return;
-        }
-        action::broadcast(action::Action{.type=GAME_DEF_ACTION_PLAYER_PICKED, .payload=_neighborAssigns[_pickFace]});
-        player::add(_neighborAssigns[_pickFace]);
-        _neighborAssigns[_pickFace] = STATE_ENUMERATE_MAX;
-        _pickFace = FACE_COUNT;
-    }
-
-    void updateNeighbors(){
-        FOREACH_FACE(f){
-            const byte value = getLastValueReceivedOnFace(f);
-            if(!isValueReceivedOnFaceExpired(f) && value >= 1) {
-                _neighborAssigns[f] = value -1;
-                continue;
-            }
-            if(_neighborAssigns[f] == STATE_ENUMERATE_MAX) {
-                continue;
-            }
-            
-            if(timer::runningFor() == 0) {
-                _pickFace = f;
-                timer::mark(700, handleDelayedPick);
-                return;
-            }
-        }
-    }
+    byte _playerCount = 2;
+    bool _isShowPlayerCount = false;
+    bool _neighboors[FACE_COUNT];
     
+    void incrementCount() {
+        _playerCount = (_playerCount + 1) % 5;
+        if(_playerCount < 2) {
+            _playerCount = 2;
+        }
+    }
+
+    byte getMissingNeighboor(){
+        FOREACH_FACE(f) {
+            if(_neighboors[f] && isValueReceivedOnFaceExpired(f)){
+                return f;
+            }
+        }
+        return FACE_COUNT;
+    }
+
+    void handlePlayerLocked(byte nextState) {
+        for(int i = 0; i < _playerCount; i++) {
+            player::add(i);
+        }
+        timer::cancel();
+        stateBoard::reset();
+        stateCommon::handleStateChange(nextState);
+    }
+
+    void handleNeighborLost(){
+        if(getMissingNeighboor() == FACE_COUNT) {
+            return;
+        }
+        if(!isAlone()){
+            action::broadcast(action::Action{.type=GAME_DEF_ACTION_PLAYER_LOCKED, .payload=0});
+            handlePlayerLocked(GAME_DEF_STATE_BOARD);
+            return;
+        }
+        handlePlayerLocked(GAME_DEF_STATE_MOVER);        
+    }
+
     void loop(const bool isEnter, const stateCommon::LoopData& data){
         if(isEnter) {
-            isError = false;
-            buttonDoubleClicked(); //clear cache state
-            _pickFace = FACE_COUNT;
-            FOREACH_FACE(f) {
-                _neighborAssigns[f] = STATE_ENUMERATE_MAX;
-            }
             player::reset();
-            player::setMax(stateEnumerate::getTotalEnumerations() - 1); // -2 players +1 total enums zero indexed
-            setValueSentOnAllFaces(stateEnumerate::getMyEnumeration()+1);
+            timer::cancel();
+            buttonSingleClicked();
+            _playerCount = 2;
+            _isShowPlayerCount = stateEnumerate::getMyEnumeration() == 0;
+            FOREACH_FACE(f){
+                _neighboors[f] = !isValueReceivedOnFaceExpired(f);
+            }
         }
-
-        if(isError) {
-            animate::pulse(RED, 4);
-        } else {
-            setColor(player::getColor(player::getCount()));
+        if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_PLAYER_LOCKED)){
+            handlePlayerLocked(GAME_DEF_STATE_BOARD);
+            return;
         }
-
-        handleSwitchToBoard(data.action);
-        handlePlayerPicked(data.action);
-        updateNeighbors();
+        if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_PLAYER_INCREMENT)) {
+            _isShowPlayerCount = false;
+            incrementCount();
+        }
+        if(buttonSingleClicked()) {
+            _isShowPlayerCount = true;
+            incrementCount();
+            action::broadcast(action::Action{.type=GAME_DEF_ACTION_PLAYER_INCREMENT, .payload=millis()});
+        }
+        if(getMissingNeighboor() < FACE_COUNT && timer::runningFor() == 0) {
+            timer::mark(700, handleNeighborLost);
+        }
+        if(!_isShowPlayerCount) {
+            setColor(dim(WHITE, 100));
+            return;
+        }
+        FOREACH_FACE(f) {
+            if(f > _playerCount-1) {
+                setColorOnFace(dim(WHITE, 100), f);
+                continue;
+            }
+            setColorOnFace(player::getColor(f), f);
+        }
     }
 }

@@ -9,7 +9,7 @@
             "includePath": [
                 "~/Documents/Arduino/hardware/Move38-Blinks-Library/avr/**",
                 "${workspaceFolder}",
-                "${workspaceFolder}/test"
+                "/Users/mdm373/Documents/Arduino/hardware/Move38-Blinks-Library/avr/**"
             ],
             "forcedInclude": [],
             "macFrameworkPath": [
