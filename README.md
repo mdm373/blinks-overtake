@@ -42,7 +42,7 @@ Upload via one of the following methods...
 
 7) **Go back to step 5 (with all eyes closed)** if no players admit defeat and there are still unoccupied board edges for players to take moves on.
 
-8) **Otherwise, double tap the board before any player moves.** The board will spin red for a few seconds while it totals up the number of spaces occupied by each player. It will then flash the color of the winning player (the one with the most spaces). In the event of a tie it will slowly pulse red.
+8) **Otherwise, triple tap the board.** The board will spin red for a few seconds while it totals up the number of spaces occupied by each player. It will then flash the color of the winning player (the one with the most spaces). In the event of a tie it will slowly pulse red.
 
 ### Additional Play Notes
 
