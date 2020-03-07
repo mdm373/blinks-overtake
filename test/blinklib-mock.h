@@ -32,6 +32,7 @@
     bool buttonDoubleClicked();
     bool buttonSingleClicked();
     bool buttonLongPressed();
+    bool buttonMultiClicked();
     bool didValueOnFaceChange(const byte face);
     bool isAlone();
     void setValueSentOnFace(const byte value, const byte face);
