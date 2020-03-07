@@ -10,6 +10,8 @@
         void spin(Color marker, byte rate);
         void radiate(Color marker, byte face, byte rate);
         void fillTo(const Color fill, const Color back, const byte face);
+        void startFade();
+        void fadeFace(const Color c, const DOUBLE_BYTE duration, const byte face);
 }
 
 #endif

@@ -9,21 +9,22 @@ namespace stateProgress {
     byte _faceBuffer[FACE_COUNT];
     bool _drawMoves;
     
+
     #define CONFLICT_RATE 4
-    #define PHASE_DURATION 2000
+    #define PHASE_DURATION 1200
     
     void handleBloomDone(){
         stateCommon::handleStateChange(GAME_DEF_STATE_BOARD);
 
     }
-    static void handleBloom() {
+    static void drawBloomState() {
         if(_drawMoves) {
             return;
         }
         FOREACH_FACE(f) {
             if(_faceBuffer[f] < PLAYER_LIMIT) {
                 stateBoard::applyOwner(f, _faceBuffer[f]);
-                animate::pulseFace(f, player::getColor(_faceBuffer[f]), 4);
+                animate::fadeFace(player::getColor(_faceBuffer[f]), PHASE_DURATION, f);
             }        
         }
     }
@@ -67,6 +68,7 @@ namespace stateProgress {
 
     void handleMovesDone(){
         _drawMoves = false;
+        animate::startFade();
         popBloomFaces();
         timer::mark(PHASE_DURATION, handleBloomDone);
     }
@@ -75,7 +77,7 @@ namespace stateProgress {
         timer::mark(PHASE_DURATION/2, handleMovesDone);
     }
 
-    static void handleMoves() {
+    static void drawMoveState() {
         if(!_drawMoves) {
             return;
         }
@@ -85,7 +87,7 @@ namespace stateProgress {
                 continue;
             }
             if(count == 1) {
-                animate::pulseFace(f, player::getColor(_faceBuffer[0]), 4);
+                animate::fadeFace(player::getColor(_faceBuffer[0]), PHASE_DURATION, f);
                 continue;
             }
             byte period = PHASE_DURATION / (count*2);
@@ -97,12 +99,13 @@ namespace stateProgress {
 
     void loop(const bool isEnter, const stateCommon::LoopData& data) {
         if(isEnter) {
-             _drawMoves = true;
+            _drawMoves = true;
+            animate::startFade();
             timer::mark(PHASE_DURATION/2, handleDelayedOwnerUpdate);
         }
         stateBoard::drawOwners();
-        handleMoves();
-        handleBloom();
+        drawMoveState();
+        drawBloomState();
         
     }
 }
