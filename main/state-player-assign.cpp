@@ -1,5 +1,4 @@
 #include "state-player-assign.h"
-#include "state-enumerate.h"
 #include "game-def.h"
 #include "action.h"
 #include "player.h"
@@ -58,7 +57,7 @@ namespace statePlayerAssign{
             timer::cancel();
             buttonSingleClicked();
             _playerCount = 2;
-            _isShowPlayerCount = stateEnumerate::getMyEnumeration() == 0;
+            _isShowPlayerCount = startState() == START_STATE_WE_ARE_ROOT;
             FOREACH_FACE(f){
                 _neighboors[f] = !isValueReceivedOnFaceExpired(f);
             }

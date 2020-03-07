@@ -23,30 +23,28 @@ Upload via one of the following methods...
 
 ### 📝 Step By Step
 
-1) **Join at least 4 blinks together and long press any one to form the board.** This step can be done at anytime to start over. The board should now be slowly pulsing white.
+1) **Join at least 4 blinks together and long press any one to form the board.** This step can be done at anytime to start over. The board should now be dim with one blink indicating the player count.
 
-2) **Double tap any blink on the board.** The board will spin white for a few seconds while it sets up before showing the player count (two)
+2) **Tap any blink on the board to change the player count.** The tapped blink will show once face color for each player (Blue, Orange, Pink, Green). Tap away until the correct number of colors are shown, one for each player.
+
+3) **Remove a single blink from the board.** This will be the player move token. The remaining blinks together form the board. The player token will radiate the color of the current player on its active edge. The board should now be mostly dark.
+
+4) **Pass the player token to the first player and all have all players close their eyes.**
+
+5) **Clockwise, one player at a time, open your eyes and make your move by connecting your token to an unoccupied (dark) face.** Connect the token using its radiating "active" side. The board will blink your color on that face to confirm and then go dark once again. The player token should switch to the next player's color.
   
-3) **Tap any blink on the board to change the player count.** The tapped blink will show once face color for each player (Blue, Orange, Pink, Green). Tap away until the correct number of colors are shown, one for each player.
+6) **Pass the token to the next player** letting them know they can now move and close your eyes.
 
-4) **Remove a single blink from the board.** This will be the player move token. The remaining blinks together form the board. The player token will radiate the color of the current player on its active edge. The board should now be mostly dark.
-
-5) **Pass the player token to the first player and all have all players close their eyes.**
-
-6) **Clockwise, one player at a time, open your eyes and make your move by connecting your token to an unoccupied (dark) face.** Connect the token using its radiating "active" side. The board will blink your color on that face to confirm and then go dark once again. The player token should switch to the next player's color.
-  
-7) **Pass the token to the next player** letting them know they can now move and close your eyes.
-
-8) **Once all players have moved, everyone should open their eyes. Double tap blink on the board**. The board will blink for a few seconds showing the space for each player's new move and then spread player occupied space outwards.
+7) **Once all players have moved, everyone should open their eyes. Double tap blink on the board**. The board will blink for a few seconds showing the space for each player's new move and then spread player occupied space outwards.
     - ✅ **Overtaken**: Spaces requested by only a single player token will be overtaken. They will pulse the requesting player's color. The space is now occupied by that player.
     - ❎ **Contested**: Spaces requested by more than one player are contested. They will alternate blinking each player's color before disappearing. The space will remain unoccupied.
 
     - ⬅️⬆️➡️ All occupied spaces will then spread their player color outwards. To spread, spaces overtake their dark neighbors if a majority of that neighbor's edges are unoccupied or owned by one player.
     - 🏘️ Spaces on the board are **neighbors** if they are adjacent to one another on the same blink or connected adjacently between two blinks.
 
-9) **Go back to step 5 (with all eyes closed)** if no players admit defeat and there are still unoccupied board edges for players to take moves on.
+8) **Go back to step 4 (with all eyes closed)** if no players admit defeat and there are still unoccupied board edges for players to take moves on.
 
-10) **Otherwise, double tap the board before any player moves.** The board will spin red for a few seconds while it totals up the number of spaces occupied by each player. It will then flash the color of the winning player (the one with the most spaces). In the event of a tie it will slowly pulse red.
+9) **Otherwise, double tap the board before any player moves.** The board will spin red for a few seconds while it totals up the number of spaces occupied by each player. It will then flash the color of the winning player (the one with the most spaces). In the event of a tie it will slowly pulse red.
 
 ### Additional Play Notes
 

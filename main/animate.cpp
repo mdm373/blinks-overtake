@@ -57,6 +57,6 @@ namespace animate {
 
     void fadeFace(const Color c, const DOUBLE_BYTE duration, const byte face) {
         DOUBLE_BYTE periodToBright = 25500 / duration;
-        setColorOnFace(dim(c,  ((millis() - _fadeStart) * periodToBright)/100), face);
+        setColorOnFace(dim(c,  (((millis() - _fadeStart) * periodToBright)/100) % 256), face);
     }
 }

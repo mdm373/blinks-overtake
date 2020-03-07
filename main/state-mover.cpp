@@ -3,7 +3,6 @@
 #include "animate.h"
 #include "player.h"
 #include "action.h"
-#include "state-enumerate.h"
 #include "game-def.h"
 #include "timer.h"
 namespace stateMover {

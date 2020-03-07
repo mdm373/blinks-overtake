@@ -7,7 +7,7 @@
 
     namespace stateCommon {
         
-        #define STATE_COMMON_STATE_LEN 6
+        #define STATE_COMMON_STATE_LEN 5
 
         struct LoopData{
             const byte face;
