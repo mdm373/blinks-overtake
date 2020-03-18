@@ -43,7 +43,7 @@ namespace stateBoard {
     void drawOwners() {
         FOREACH_FACE(f) {
             if(_ownership[f] == PLAYER_LIMIT) {
-                setColorOnFace(dim(WHITE, 40), f);
+                setColorOnFace(FIELD, f);
                 continue;
             }
             setColorOnFace(player::getColor(_ownership[f]), f);

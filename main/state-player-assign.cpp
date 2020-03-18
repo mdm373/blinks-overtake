@@ -79,12 +79,12 @@ namespace statePlayerAssign{
             timer::mark(700, handleNeighborLost);
         }
         if(!_isShowPlayerCount) {
-            setColor(dim(WHITE, 100));
+            setColor(dim(FIELD, 100));
             return;
         }
         FOREACH_FACE(f) {
             if(f > _playerCount-1) {
-                setColorOnFace(dim(WHITE, 100), f);
+                setColorOnFace(dim(FIELD, 100), f);
                 continue;
             }
             setColorOnFace(player::getColor(f), f);

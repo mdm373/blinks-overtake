@@ -1,21 +1,24 @@
 #include "player.h"
+#include "colors.h"
 
 namespace player {
     
     byte _playerEnums[PLAYER_LIMIT];
     byte _count;
     
+    
+
     Color getColor(const byte index) {
         if(index == 0) {
-            return CYAN;
+            return COLOR_PLAYER1;
         }
         if(index == 1) {
-            return YELLOW;
+            return COLOR_PLAYER2;
         }
         if(index == 2) {
-            return MAGENTA;
+            return COLOR_PLAYER3;
         }
-        return GREEN;
+        return COLOR_PLAYER4;
     }
 
     void add(const byte enumeration) {
