@@ -26,13 +26,13 @@ namespace stateEnd {
         if(op == DISTRIBUTED_TASK_OP_PASSED_DONE) {
             _playerTotals[_playerIndex] = payload;
             _playerIndex++;
-            if(_playerIndex < player::getCount() && stateBoard::isEndInitiator()){
+            if(_playerIndex < PLAYER_LIMIT && stateBoard::isEndInitiator()){
                 timer::mark(MSG_DELAY, _totalInit);
                 return payload;
             }
-            if(_playerIndex == player::getCount()) {
+            if(_playerIndex == PLAYER_LIMIT) {
                 byte highestCount = 0;
-                for(byte i = 0; i < player::getCount(); ++i) {
+                for(byte i = 0; i < PLAYER_LIMIT; ++i) {
                     if(_playerTotals[i] > highestCount) {
                         highestCount = _playerTotals[i];
                         _winner = i;

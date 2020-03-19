@@ -5,6 +5,6 @@
     #include <ArduinoTypes.h>
     #include <blinklib.h>
     
-    #define DOUBLE_BYTE uint16_t
+    #define twoBytes uint16_t
     
 #endif

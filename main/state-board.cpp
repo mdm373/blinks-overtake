@@ -3,6 +3,7 @@
 #include "game-def.h"
 #include "player.h"
 #include "timer.h"
+#include "colors.h"
 
 #pragma clang diagnostic ignored "-Wnarrowing"
 
@@ -17,12 +18,12 @@ namespace stateBoard {
     byte _playerToFaceRequests[PLAYER_LIMIT];
     byte _lastFace;
     bool _isEndInitiator;
-
-    //reusable
     byte _moveIndex;
     byte _viewState;
+    bool _isTransitioningToMover;
     
     void handleEnter() {
+        _isTransitioningToMover = false;
         _isEndInitiator = false;
         _moveIndex = 0;
         _viewState = VIEW_STATE_NORMAL;
@@ -43,7 +44,7 @@ namespace stateBoard {
     void drawOwners() {
         FOREACH_FACE(f) {
             if(_ownership[f] == PLAYER_LIMIT) {
-                setColorOnFace(FIELD, f);
+                setColorOnFace(COLOR_FIELD, f);
                 continue;
             }
             setColorOnFace(player::getColor(_ownership[f]), f);
@@ -63,16 +64,16 @@ namespace stateBoard {
     }
 
     void handleViewNormalize(){
-        action::send(action::Action{.type=GAME_DEF_ACTION_MOVE_RESPONSE, .payload = _viewState == VIEW_STATE_ERROR ? 0 : 1}, _lastFace);
         _viewState = VIEW_STATE_NORMAL;
     }
+    
     void processPlayerRequests(const stateCommon::LoopData& data){
         if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_MOVE_TAKEN)) {
             _playerToFaceRequests[data.action.payload] = FACE_ELSEWHERE;
         }
         if(data.action.type == GAME_DEF_ACTION_MOVE_REQUEST && timer::runningFor()  == 0) {
             _lastFace = data.face;
-            _moveIndex = player::getIndex(data.action.payload);
+            _moveIndex = data.action.payload;
             timer::mark(800, handleViewNormalize);
             bool isInvalid = _playerToFaceRequests[_moveIndex] != FACE_COUNT || _ownership[data.face] != PLAYER_LIMIT;
             if(isInvalid) {
@@ -122,10 +123,28 @@ namespace stateBoard {
         return false;
     }
 
+    void handleTransitionToMover() {
+        stateCommon::handleStateChange(GAME_DEF_STATE_MOVER);
+    }
+
+    void handleMoverTransition(){
+        if(isAlone() && timer::runningFor() == 0 && !_isTransitioningToMover){
+            _isTransitioningToMover = true;
+            timer::mark(100, handleTransitionToMover);
+            return;
+        }
+        if(!isAlone && _isTransitioningToMover == true) {
+            timer::cancel();
+            _isTransitioningToMover = false;
+            return;
+        }
+    }
+
     void loop(const bool isEnter, const stateCommon::LoopData& data){
         if(isEnter) {
             handleEnter();
         }
+        handleMoverTransition();
         updateView();
         processPlayerRequests(data);
         handleProgression(data);

@@ -8,8 +8,8 @@
         
         typedef void (TimerCallback)(void);
 
-        void mark(DOUBLE_BYTE duration, TimerCallback& onDone);
-        DOUBLE_BYTE runningFor();
+        void mark(twoBytes duration, TimerCallback& onDone);
+        twoBytes runningFor();
         void loop();
         void cancel();
     }

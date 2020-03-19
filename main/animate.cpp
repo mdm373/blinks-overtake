@@ -1,10 +1,12 @@
 #include "animate.h"
+#include "math.h"
+#include <Arduino.h>
 
 #pragma clang diagnostic ignored "-Wnarrowing"
 
 namespace animate {
 
-    DOUBLE_BYTE _fadeStart = 0;
+    twoBytes _fadeStart = 0;
 
     void pulse(Color c, byte rate) {
         byte b = sin8_C(millis()/rate);
@@ -51,12 +53,34 @@ namespace animate {
         pulseOffsetFace((FACE_COUNT + face - 1) % FACE_COUNT    , marker, -63, rate);
     }
 
-    void startFade() {
+    void startAnim() {
         _fadeStart = millis();
     }
 
-    void fadeFace(const Color c, const DOUBLE_BYTE duration, const byte face) {
-        DOUBLE_BYTE periodToBright = 25500 / duration;
-        setColorOnFace(dim(c,  (((millis() - _fadeStart) * periodToBright)/100) % 256), face);
+    void animFadeFace(const Color c, const twoBytes duration, const byte func, const byte face) {
+        twoBytes periodToBright = 25500 / duration;
+        twoBytes elapsed = millis() - _fadeStart;
+        byte factor = (elapsed * periodToBright) / 100;
+        if(func == ANIMATE_FUNCTION_IN) {
+            factor = min( factor, 255);
+        } else {
+            factor = max(255 - factor, 0);
+        }
+        setColorOnFace(dim(c, factor), face);
+    }
+
+    byte getComponent(byte from, byte to, twoBytes duration, twoBytes elapsed) {
+        bool isDown = to < from;
+        twoBytes period = max(to, from) - min(to, from);
+        twoBytes delta = (((period*1000) / duration) * elapsed) / 1000;
+        return isDown ? from - delta : from + delta;
+    }
+
+    void animTransitionFace(const Color from, const Color to, const twoBytes duration, const byte face) {
+        twoBytes elapsed = millis() - _fadeStart;
+        byte r = getComponent(from.r, to.r, duration, elapsed);
+        byte g = getComponent(from.g, to.g, duration, elapsed);
+        byte b = getComponent(from.b, to.b, duration, elapsed);
+        setColorOnFace(MAKECOLOR_5BIT_RGB(r, g, b), face);
     }
 }
