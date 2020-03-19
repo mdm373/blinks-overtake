@@ -49,9 +49,12 @@ namespace stateMover {
         handlePlayerChange();
         handleConnectionStatus();
         if(_viewState == VIEW_SENDING) {
-            animate::spin(player::getColor(_currentPlayer), 4);
+            animate::radiate(player::getColor(_currentPlayer), 0, 4);
             return;
         }
-        animate::radiate(player::getColor(_currentPlayer), 0, 6);
+        setColor(OFF);
+        setColorOnFace(dim(player::getColor(_currentPlayer), 255), 0);
+        setColorOnFace(dim(WHITE, 120), 1);
+        setColorOnFace(dim(WHITE, 120), 5);
     }
 }
