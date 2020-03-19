@@ -5,14 +5,25 @@
 #include "state-board.h"
 #include "game-def.h"
 #include "timer.h"
+#include "colors.h"
 
 namespace stateEnd {
 
     byte _playerIndex = 0;
     byte _playerTotals[PLAYER_LIMIT];
     byte _winner = 0;
-    
-    #define MSG_DELAY 300
+    bool _swapFromTo;
+
+    #define MSG_DELAY 100
+    #define WIN_PULSE_DURATION 1200
+    #define DIM_FIELD dim(COLOR_FIELD, 100)
+
+    void handleWinPulse(){
+        _swapFromTo = !_swapFromTo;
+        animate::startAnim();
+        timer::mark(WIN_PULSE_DURATION, handleWinPulse);
+    }
+
     byte totalHandler(const byte op, const byte payload) {
         if(op == DISTRIBUTED_TASK_OP_PASSING_IN) {
             byte count = payload;
@@ -42,6 +53,8 @@ namespace stateEnd {
                         _winner = PLAYER_LIMIT;
                     }
                 }
+                animate::startAnim();
+                timer::mark(WIN_PULSE_DURATION, handleWinPulse);
             }
         }
         return payload;
@@ -64,10 +77,20 @@ namespace stateEnd {
             animate::spin(RED, 4);
             return;
         }
-        if(_winner == PLAYER_LIMIT) {
-            animate::pulse(RED, 16);
-            return;
+        FOREACH_FACE(f) {
+            byte owner = stateBoard::getOwnership(f);
+            if(owner == PLAYER_LIMIT) {
+                setColorOnFace(DIM_FIELD, f);
+                continue;
+            }
+            if(_winner == PLAYER_LIMIT || owner == _winner) {
+                Color baseColor = _winner == PLAYER_LIMIT ? DIM_FIELD : WHITE;
+                Color from = _swapFromTo ? baseColor : player::getColor(owner);
+                Color to = _swapFromTo ? player::getColor(owner) : baseColor;
+                animate::animTransitionFace(from, to, WIN_PULSE_DURATION, f);
+                continue;
+            }
+            setColorOnFace(player::getColor(owner), f);
         }
-        animate::pulse(player::getColor(_winner), 2);
     }
 }

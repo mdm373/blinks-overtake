@@ -33,6 +33,7 @@ namespace stateBoard {
         for(byte i = 0; i < PLAYER_LIMIT; i++) {
             _playerToFaceRequests[i] = FACE_COUNT;
         }
+        timer::cancel();
     }
 
     void updateOffOwners(){

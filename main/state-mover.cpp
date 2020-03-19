@@ -42,6 +42,7 @@ namespace stateMover {
     void loop(const bool isEnter, const stateCommon::LoopData& data) {
         if(isEnter) {
             buttonSingleClicked();
+            timer::cancel();
             _viewState = VIEW_IDLE;
             _currentPlayer = 0;
         }
