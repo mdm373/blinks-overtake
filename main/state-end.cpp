@@ -15,7 +15,7 @@ namespace stateEnd {
     bool _swapFromTo;
 
     #define MSG_DELAY 100
-    #define WIN_PULSE_DURATION 1200
+    #define WIN_PULSE_DURATION 900
     #define DIM_FIELD dim(COLOR_FIELD, 100)
 
     void handleWinPulse(){
@@ -74,7 +74,7 @@ namespace stateEnd {
         }
         distributedTask::loop(data, GAME_DEF_ACTION_TOTAL_OWNERSHIP, totalHandler);
         if(_winner > PLAYER_LIMIT) {
-            animate::spin(RED, 4);
+            animate::pulse(COLOR_FIELD, 6);
             return;
         }
         FOREACH_FACE(f) {
