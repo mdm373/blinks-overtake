@@ -1,4 +1,4 @@
-# Overtake (Single Widget: Automatic)
+# Blinks: Raid
 
 > A Turn Based Strategy Game for [blinks](https://blinks.games/)
 
