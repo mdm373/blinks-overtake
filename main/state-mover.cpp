@@ -3,29 +3,54 @@
 #include "animate.h"
 #include "player.h"
 #include "action.h"
-#include "state-enumerate.h"
 #include "game-def.h"
 #include "timer.h"
 namespace stateMover {
-    bool _hasSent = false;
-    bool _showSending = false;
 
-    void handleViewNormalize() {
-        _showSending = false;
+    #define VIEW_IDLE 0
+    #define VIEW_SENDING 1
+    
+    byte _viewState = VIEW_IDLE;
+    byte _currentPlayer = 0;
+
+    void handleDelayedSend() {
+        action::send(action::Action{.type=GAME_DEF_ACTION_MOVE_REQUEST, .payload = _currentPlayer}, 0);
     }
-    void loop(const bool isEnter, const stateCommon::LoopData& data) {
-        _hasSent = _hasSent && !isEnter;
-        if(isValueReceivedOnFaceExpired(0)) {
-            _hasSent = false;
-        }
-        
-        animate::radiate(player::getColor(player::getCount()), 0, 6);
-        if(!isValueReceivedOnFaceExpired(0) && !_hasSent) {
-            _hasSent = true;
-            _showSending = true;
-            timer::mark(800, handleViewNormalize);
-            action::send(action::Action{.type=GAME_DEF_ACTION_MOVE_REQUEST, .payload = stateEnumerate::getMyEnumeration()}, 0);
+    
+    void handleViewNormalize() {
+        _viewState = VIEW_IDLE;
+    }
+
+    void handleConnectionStatus(){
+        if(isAlone()) {
+            _viewState = VIEW_IDLE;
+            timer::cancel();
             return;
-        }        
+        }
+        if(_viewState == VIEW_IDLE && !isValueReceivedOnFaceExpired(0)) {
+            _viewState = VIEW_SENDING;
+            timer::mark(50, handleDelayedSend);
+        }
+    }
+
+    void handlePlayerChange(){
+        if(buttonSingleClicked() && isAlone()) {
+            _currentPlayer = (_currentPlayer + 1) % PLAYER_LIMIT;
+        }
+    }
+
+    void loop(const bool isEnter, const stateCommon::LoopData& data) {
+        if(isEnter) {
+            buttonSingleClicked();
+            _viewState = VIEW_IDLE;
+            _currentPlayer = 0;
+        }
+        handlePlayerChange();
+        handleConnectionStatus();
+        if(_viewState == VIEW_SENDING) {
+            animate::spin(player::getColor(_currentPlayer), 4);
+            return;
+        }
+        animate::radiate(player::getColor(_currentPlayer), 0, 6);
     }
 }

@@ -4,26 +4,33 @@
 #include "timer.h"
 #include "game-def.h"
 #include "animate.h"
+#include "colors.h"
 
 namespace stateProgress {
+
+    #define VIEW_MOVES_HIGHLIGHT 0
+    #define VIEW_MOVES_SHOW 1
+    #define VIEW_BLOOM 2
+
     byte _faceBuffer[FACE_COUNT];
-    bool _drawMoves;
+    byte _viewState;
     
+
     #define CONFLICT_RATE 4
-    #define PHASE_DURATION 2000
+    #define PHASE_DURATION 600
     
     void handleBloomDone(){
         stateCommon::handleStateChange(GAME_DEF_STATE_BOARD);
 
     }
-    static void handleBloom() {
-        if(_drawMoves) {
+    static void drawBloomState() {
+        if(_viewState != VIEW_BLOOM) {
             return;
         }
         FOREACH_FACE(f) {
             if(_faceBuffer[f] < PLAYER_LIMIT) {
                 stateBoard::applyOwner(f, _faceBuffer[f]);
-                animate::pulseFace(f, player::getColor(_faceBuffer[f]), 4);
+                animate::animTransitionFace(COLOR_FIELD, player::getColor(_faceBuffer[f]), PHASE_DURATION, f);
             }        
         }
     }
@@ -66,17 +73,21 @@ namespace stateProgress {
     }
 
     void handleMovesDone(){
-        _drawMoves = false;
+        _viewState = VIEW_BLOOM;
+        animate::startAnim();
         popBloomFaces();
         timer::mark(PHASE_DURATION, handleBloomDone);
     }
-    void handleDelayedOwnerUpdate(){
-        stateBoard::updateOffOwners();
-        timer::mark(PHASE_DURATION/2, handleMovesDone);
-    }
 
-    static void handleMoves() {
-        if(!_drawMoves) {
+    void handleMovesHighlightDone(){
+        _viewState = VIEW_MOVES_SHOW;
+        stateBoard::updateOffOwners();
+        animate::startAnim();
+        timer::mark(PHASE_DURATION, handleMovesDone);
+    }
+    
+    static void drawMoveState() {
+        if(_viewState > VIEW_MOVES_SHOW) {
             return;
         }
         FOREACH_FACE(f) {
@@ -85,7 +96,11 @@ namespace stateProgress {
                 continue;
             }
             if(count == 1) {
-                animate::pulseFace(f, player::getColor(_faceBuffer[0]), 4);
+                if(_viewState == VIEW_MOVES_HIGHLIGHT) {
+                    animate::animTransitionFace(COLOR_FIELD, WHITE, PHASE_DURATION/2, f);
+                } else {
+                    animate::animTransitionFace(WHITE, player::getColor(_faceBuffer[0]), PHASE_DURATION, f);
+                }
                 continue;
             }
             byte period = PHASE_DURATION / (count*2);
@@ -97,12 +112,13 @@ namespace stateProgress {
 
     void loop(const bool isEnter, const stateCommon::LoopData& data) {
         if(isEnter) {
-             _drawMoves = true;
-            timer::mark(PHASE_DURATION/2, handleDelayedOwnerUpdate);
+            _viewState = VIEW_MOVES_HIGHLIGHT;
+            animate::startAnim();
+            timer::mark(PHASE_DURATION/2, handleMovesHighlightDone);
         }
         stateBoard::drawOwners();
-        handleMoves();
-        handleBloom();
+        drawMoveState();
+        drawBloomState();
         
     }
 }
