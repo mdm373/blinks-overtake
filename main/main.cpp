@@ -39,7 +39,7 @@ namespace _main_ {
                 stateCommon::loop(data);
             }
         }
-        stateCommon::LoopData empty{.face=FACE_COUNT, .action=action::Action{.type=GAME_DEF_ACTION_INVALID}};
+        stateCommon::LoopData empty{.face=FACE_COUNT, .action=action::Action{.type=GAME_DEF_ACTION_INVALID, .payload=0}};
         if(!globalEvents::isHandled(empty)) {
             stateCommon::loop(empty);
         }
