@@ -15,7 +15,7 @@ namespace stateEnd {
     bool _swapFromTo;
 
     #define MSG_DELAY 100
-    #define WIN_PULSE_DURATION 900
+    #define WIN_PULSE_DURATION 600
     #define DIM_FIELD dim(COLOR_FIELD, 100)
 
     void handleWinPulse(){
@@ -90,7 +90,7 @@ namespace stateEnd {
                 animate::animTransitionFace(from, to, WIN_PULSE_DURATION, f);
                 continue;
             }
-            setColorOnFace(player::getColor(owner), f);
+            setColorOnFace(dim(player::getColor(owner), 150), f);
         }
     }
 }
