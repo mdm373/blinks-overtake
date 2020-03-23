@@ -20,10 +20,8 @@ namespace stateBoard {
     bool _isEndInitiator;
     byte _moveIndex;
     byte _viewState;
-    bool _isTransitioningToMover;
     
     void handleEnter() {
-        _isTransitioningToMover = false;
         _isEndInitiator = false;
         _moveIndex = 0;
         _viewState = VIEW_STATE_NORMAL;
@@ -99,45 +97,30 @@ namespace stateBoard {
         stateCommon::handleStateChange(GAME_DEF_STATE_PROGRESS);
     }
 
-    bool handleProgression(const stateCommon::LoopData& data){
+    void handleProgression(const stateCommon::LoopData& data){
         if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_PROGRESS)) {
             changeToProgress();
-            return true;
+            return;
         }
         if(action::isBroadcastReceived(data.action, GAME_DEF_ACTION_END)) {
             timer::cancel();
             stateCommon::handleStateChange(GAME_DEF_STATE_END);
-            return true;
+            return;
         }
         if(buttonMultiClicked()){
             action::broadcast(action::Action{.type=GAME_DEF_ACTION_END, .payload=millis()});
             _isEndInitiator = true;
             timer::cancel();
             stateCommon::handleStateChange(GAME_DEF_STATE_END);
-            return false;
+            return;
         }
         if(buttonDoubleClicked()){
+            if(isAlone()) {
+                stateCommon::handleStateChange(GAME_DEF_STATE_MOVER);
+                return;
+            }
             action::broadcast(action::Action{.type=GAME_DEF_ACTION_PROGRESS, .payload = millis()});
             changeToProgress();
-            return true;
-        }
-        return false;
-    }
-
-    void handleTransitionToMover() {
-        stateCommon::handleStateChange(GAME_DEF_STATE_MOVER);
-    }
-
-    void handleMoverTransition(){
-        if(isAlone() && timer::runningFor() == 0 && !_isTransitioningToMover){
-            _isTransitioningToMover = true;
-            timer::mark(100, handleTransitionToMover);
-            return;
-        }
-        if(!isAlone && _isTransitioningToMover == true) {
-            timer::cancel();
-            _isTransitioningToMover = false;
-            return;
         }
     }
 
@@ -145,7 +128,6 @@ namespace stateBoard {
         if(isEnter) {
             handleEnter();
         }
-        handleMoverTransition();
         updateView();
         processPlayerRequests(data);
         handleProgression(data);

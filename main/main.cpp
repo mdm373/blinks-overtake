@@ -18,6 +18,7 @@ namespace _main_ {
         stateCommon::addState(stateProgress::loop, GAME_DEF_STATE_PROGRESS);
         stateCommon::addState(stateEnd::loop, GAME_DEF_STATE_END);
         stateCommon::handleStateChange(GAME_DEF_STATE_DEFAULT);
+        stateBoard::reset();
     }
 
     

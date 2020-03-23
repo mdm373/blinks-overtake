@@ -8,10 +8,6 @@
 
 ## Play
 
-<!-- 
-## 🎯 [Watch & Learn](https://mdm373.github.io/blinks-overtake/)
--->
-
 ### Install
 
 Upload via one of the following methods...
@@ -23,24 +19,24 @@ Upload via one of the following methods...
 
 ### 📝 Step By Step
 
-1) **Join at least 4 blinks together and long press any one to form the island.** This step can be done at anytime to start over. The island should now be solid green
+1) **Discover the island.** Join at least 4 blinks together and long press any one of them. The blinks should all turn solid green in response. They now form the island that you and your fellow vikings will be fighting to control. This step can be done at anytime to start over. The island should now be solid green
 
-2) **Remove a blink from the island's edge.** This will be the player's viking longship. The longship is lit with the current player color on its active edge. The two flanking white faces vaguely make the longship blink resemble a pointy viking helmet. You can remove more longships for other players or share a single longship. To change the longship player color, tap it once.
+2) **Assemble your longships.** Remove a blink from the island's edge and double tap it. This will be the player's viking longship. The longship is lit with the current player color on its active edge. (The two flanking white faces vaguely make the longship blink resemble a pointy viking helmet. 😉) You can remove more longships for other players or share a single longship. To change the longship player color, tap it once to cycle to the next color.
 
-3) **Everyone take a good long look at the island and decide (in secret) where you want to land your longship.** Once everyone has their minds made up, have all players close their eyes.
+3) **Plan the attack.** Everyone should take a look at the island and decide (in secret) where you want to land your longship. Once everyone has their minds made up, have all players close their eyes.
 
-4) **Clockwise, one player at a time, open your eyes and make your move by connecting your longship to an unoccupied (green) island edge.** Connect the token using its player color "active" side. The island will blink your color on that face to confirm and then return to green once again. If your all sharing a long ship, give it a tap to move it to the next player color and pass it along. Otherwise, let the next player know its their turn and close your eyes.
+4) **Stake your claim.** Clockwise, one player at a time, land your longships along the island shore. Open your eyes and make your move by connecting your longship to an unoccupied (green) island edge. Connect the token using its player color "active" side. The island will blink your color on that face to confirm and then return to green once again. If your all sharing a long ship, give it a tap to move it to the next player color and pass it along. Otherwise, let the next player know its their turn and close your eyes.
   
-5) **Once all players have moved, everyone should open their eyes. Double tap blink on the island**. The island fill fade in each players new move over a few seconds showing where that players longship landed this turn. Each player's viking hoard will then spread outwards to occupy neighboring spaces.
+5) **Attack, advance, conquer!** Once all players have moved, everyone should open their eyes. Double tap any blink on the island. The island fill fade in each players new move over a few seconds showing where that players longship landed this turn. Each player's viking crew will then spread outwards to occupy neighboring spaces.
     - ✅ **Captured**: Spaces attacked by only a single player token are now occupied by that player. They will pulse the requesting player's color.
     - ❎ **Contested**: Spaces attacked by more than one player are contested. They will alternate blinking each player's color before disappearing. The space will remain unoccupied.
 
     - ⬅️⬆️➡️ All occupied spaces will then spread their player's armies outwards. To spread, armies capture unoccupied neighbors on the island if a majority of that neighbor's edges are unoccupied or owned by a single player.
     - 🏘️ Spaces on the island are **neighbors** if they are adjacent to one another on the same blink or connected adjacently between two blinks.
 
-6) **Go back to step 3 (with all eyes closed)** if no players admit defeat and there are still unoccupied island edges for players to take moves on.
+6) **Back into the fray.** If no players admit defeat and there are still unoccupied island edges for players to take moves on go back to step 3 (with all eyes closed) to fight out another round.
 
-7) **Otherwise, triple tap the island.** The island will pulse green for a few seconds while it totals up the number of spaces occupied by each player. The winning player (the one with the most spaces) spaces will flash white. In the event of a tie, all spaces will fade to green for each player.
+7) **Crown the victor.** Otherwise, triple tap the island. The island will pulse green for a few seconds while it totals up the number of spaces occupied by each player. The winning player (the one with the most spaces) spaces will flash white. In the event of a tie, all spaces will fade to green for each player.
 
 ### Additional Play Notes
 
