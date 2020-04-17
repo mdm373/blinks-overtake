@@ -5,6 +5,7 @@
     
     namespace globalEvents {
         bool isHandled(const stateCommon::LoopData& data);
+        bool checkWake();
     }
 
 #endif

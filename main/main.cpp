@@ -24,6 +24,9 @@ namespace _main_ {
     
     void loop() {
         timer::loop();
+        if(globalEvents::checkWake()){
+            return;
+        }
         FOREACH_FACE(face) {
             if(!isDatagramReadyOnFace(face)) {
                 continue;

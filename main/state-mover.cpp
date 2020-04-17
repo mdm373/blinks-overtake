@@ -34,14 +34,14 @@ namespace stateMover {
     }
 
     void handlePlayerChange(){
-        if(buttonSingleClicked() && isAlone()) {
+        if(buttonDoubleClicked() && isAlone()) {
             _currentPlayer = (_currentPlayer + 1) % PLAYER_LIMIT;
         }
     }
 
     void loop(const bool isEnter, const stateCommon::LoopData& data) {
         if(isEnter) {
-            buttonSingleClicked();
+            buttonDoubleClicked();
             timer::cancel();
             _viewState = VIEW_IDLE;
             _currentPlayer = 0;
