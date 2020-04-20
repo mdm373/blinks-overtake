@@ -137,7 +137,7 @@ namespace stateBoard {
     void reset() {
         FOREACH_FACE(f){
             _ownership[f] = PLAYER_LIMIT;
-            fieldOffsets[f] = 7 + ( ( (getSerialNumberByte(f) + millis()) % 5 ) * 6);
+            fieldOffsets[f] = 13 + ( ( (getSerialNumberByte(f) + millis()) % 4 ) * 6);
         }
     }
 
