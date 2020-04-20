@@ -14,6 +14,7 @@
         byte getOffOwnership(const byte face);
         void updateOffOwners();
         bool isEndInitiator();
+        Color getFieldColor(const byte face);
     }
     
 #endif
