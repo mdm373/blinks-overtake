@@ -44,7 +44,7 @@ namespace stateBoard {
     void drawOwners() {
         FOREACH_FACE(f) {
             if(_ownership[f] == PLAYER_LIMIT) {
-                setColorOnFace(MAKECOLOR_5BIT_RGB(0, fieldOffsets[f], 0), f);
+                setColorOnFace(MAKECOLOR_5BIT_RGB(fieldOffsets[f], 31, fieldOffsets[f]), f);
                 continue;
             }
             setColorOnFace(player::getColor(_ownership[f]), f);
@@ -137,7 +137,7 @@ namespace stateBoard {
     void reset() {
         FOREACH_FACE(f){
             _ownership[f] = PLAYER_LIMIT;
-            fieldOffsets[f] = 13 + ( ( (getSerialNumberByte(f) + millis()) % 4 ) * 6);
+            fieldOffsets[f] = ( (getSerialNumberByte(f) + millis()) % 4 ) * 6;
         }
     }
 
