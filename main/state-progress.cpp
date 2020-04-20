@@ -17,7 +17,7 @@ namespace stateProgress {
     
 
     #define CONFLICT_RATE 4
-    #define PHASE_DURATION 600
+    #define PHASE_DURATION 1000
     
     void handleBloomDone(){
         stateCommon::handleStateChange(GAME_DEF_STATE_BOARD);
@@ -30,7 +30,7 @@ namespace stateProgress {
         FOREACH_FACE(f) {
             if(_faceBuffer[f] < PLAYER_LIMIT) {
                 stateBoard::applyOwner(f, _faceBuffer[f]);
-                animate::animTransitionFace(COLOR_FIELD, player::getColor(_faceBuffer[f]), PHASE_DURATION, f);
+                animate::animTransitionFace(stateBoard::getFieldColor(f), player::getColor(_faceBuffer[f]), PHASE_DURATION, f);
             }        
         }
     }
@@ -97,7 +97,7 @@ namespace stateProgress {
             }
             if(count == 1) {
                 if(_viewState == VIEW_MOVES_HIGHLIGHT) {
-                    animate::animTransitionFace(COLOR_FIELD, WHITE, PHASE_DURATION/2, f);
+                    animate::animTransitionFace(stateBoard::getFieldColor(f), WHITE, PHASE_DURATION/2, f);
                 } else {
                     animate::animTransitionFace(WHITE, player::getColor(_faceBuffer[0]), PHASE_DURATION, f);
                 }
