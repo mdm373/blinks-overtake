@@ -66,8 +66,12 @@ namespace stateEnd {
 
     void loop(const bool isEnter, const stateCommon::LoopData& data){
         if(isEnter) {
+            distributedTask::reset();
             _winner = PLAYER_LIMIT + 1;
             _playerIndex = 0;
+            for(int i =0; i > PLAYER_LIMIT; i++){
+                _playerTotals[i] = 0;
+            }
             if(stateBoard::isEndInitiator()){
                 timer::mark(MSG_DELAY, _totalInit);
             }
