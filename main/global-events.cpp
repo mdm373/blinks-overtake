@@ -10,7 +10,7 @@ namespace globalEvents {
     bool _pendingReset = false;
 
     void changeAllToReset(){
-        action::broadcast(action::Action{.type=GAME_DEF_ACTION_RESET, .payload=millis()});
+        action::broadcast( (byte) GAME_DEF_ACTION_RESET,  (byte) millis() );
         stateBoard::reset();
         stateCommon::handleStateChange(GAME_DEF_STATE_DEFAULT);
     }

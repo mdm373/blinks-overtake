@@ -85,7 +85,7 @@ namespace stateBoard {
             }
             _viewState = VIEW_STATE_RADIATE;
             _playerToFaceRequests[_moveIndex] = data.face;
-            action::broadcast(action::Action{.type=GAME_DEF_ACTION_MOVE_TAKEN, .payload=_moveIndex});
+            action::broadcast(  GAME_DEF_ACTION_MOVE_TAKEN, _moveIndex );
         }
     }
 
@@ -112,7 +112,7 @@ namespace stateBoard {
             return;
         }
         if(buttonMultiClicked()){
-            action::broadcast(action::Action{.type=GAME_DEF_ACTION_END, .payload=millis()});
+            action::broadcast( GAME_DEF_ACTION_END,  millis() );
             _isEndInitiator = true;
             timer::cancel();
             stateCommon::handleStateChange(GAME_DEF_STATE_END);
@@ -123,7 +123,7 @@ namespace stateBoard {
                 stateCommon::handleStateChange(GAME_DEF_STATE_MOVER);
                 return;
             }
-            action::broadcast(action::Action{.type=GAME_DEF_ACTION_PROGRESS, .payload = millis()});
+            action::broadcast(  GAME_DEF_ACTION_PROGRESS,  millis() );
             changeToProgress();
         }
     }

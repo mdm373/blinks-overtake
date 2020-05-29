@@ -14,7 +14,7 @@ namespace stateMover {
     byte _currentPlayer = 0;
 
     void handleDelayedSend() {
-        action::send(action::Action{.type=GAME_DEF_ACTION_MOVE_REQUEST, .payload = _currentPlayer}, 0);
+        action::send( (byte) GAME_DEF_ACTION_MOVE_REQUEST,  _currentPlayer , 0);
     }
     
     void handleViewNormalize() {
