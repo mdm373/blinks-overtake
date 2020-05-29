@@ -16,13 +16,19 @@
         void broadcast(const byte type, const byte payload );
         bool send(const byte type, const byte payload , const byte face);
 
-        bool isBroadcastReceived(const Action& action, const byte type);
-        Action decode(const byte* buffer);
+        bool isBroadcastReceived(const Action& incoming, const byte type);
 
-        void inline encode(const Action& action, byte* buffer) {
-            buffer[0] = action.type;
-            buffer[1] = action.payload;
+        Action decode(const byte* buffer);
+        void encode(const Action& action, byte* buffer);
+        
+        byte inline decode_type( const byte* buffer) {
+            return buffer[0];
         }
+
+        byte inline decode_payload( const byte* buffer) {
+            return buffer[1];
+        }
+
 
 }
 
